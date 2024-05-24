@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="sdkName" value="Remote Python 3.9.18 (sftp://root@192.168.150.14:3402/opt/conda/envs/unilm_env/bin/python3.9)" />
   </component>
-  <component name="ProjectRootManager">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="Remote Python 3.9.18 (sftp://root@192.168.150.14:3402/opt/conda/envs/unilm_env/bin/python3.9)" project-jdk-type="Python SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
