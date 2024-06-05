@@ -3,7 +3,7 @@
 # @Created Time: 2024/5/21 4:34 PM
 # @File: blip2_vision
 # @Email: mlshenkai@163.com
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, Mapping, Any
 
 import torch
 import torch.nn as nn
@@ -22,9 +22,9 @@ class Blip2VisionEmbeddings(nn.Module):
         self.patch_size = config.patch_size
         self.embed_dim = config.hidden_size
 
-        self.class_embeds = nn.Parameter(torch.randn(1, 1, self.embed_dim))
+        self.class_embedding = nn.Parameter(torch.randn(1, 1, self.embed_dim))
 
-        self.patch_embeds = nn.Conv2d(
+        self.patch_embedding = nn.Conv2d(
             in_channels=3,
             out_channels=self.embed_dim,
             kernel_size=self.patch_size,
@@ -34,7 +34,7 @@ class Blip2VisionEmbeddings(nn.Module):
         self.num_patches = (self.image_size // self.patch_size) ** 2
         self.num_positions = self.num_patches + 1
 
-        self.position_embeds = nn.Parameter(
+        self.position_embedding = nn.Parameter(
             torch.randn(1, self.num_positions, self.embed_dim)
         )
 
@@ -47,22 +47,22 @@ class Blip2VisionEmbeddings(nn.Module):
 
         batch_size = pixel_values.shape[0]
 
-        target_dtype = self.patch_embeds.weight.dtype
+        target_dtype = self.patch_embedding.weight.dtype
 
-        patch_embeds = self.patch_embeds(
+        patch_embeds = self.patch_embedding(
             pixel_values.to(target_dtype)
         )  # [batch_size, embed_dim, patch_size, patch_size]
         patch_embeds = patch_embeds.flatten(2).transpose(
             2, 1
         )  # [batch_size, patch_size*patch_size, embed_dim]
 
-        class_embeds = self.class_embeds.expand(batch_size, 1, -1)
+        class_embeds = self.class_embedding.expand(batch_size, 1, -1)
 
         embeddings = torch.cat(
             [class_embeds, patch_embeds], dim=1
         )  # [batch_size, patch_size*patch_size+1, embed_dim]
 
-        embeddings = embeddings + self.position_embeds[:, : embeddings.size(1), :].to(
+        embeddings = embeddings + self.position_embedding[:, : embeddings.size(1), :].to(
             target_dtype
         )
         return embeddings
@@ -96,7 +96,7 @@ class Blip2MultiHeadAttention(nn.Module):
             )
             self.qkv.bias = nn.Parameter(qkv_bias)
 
-        self.projector = nn.Linear(self.embed_dim, self.embed_dim)
+        self.projection = nn.Linear(self.embed_dim, self.embed_dim)
 
     def _shape(self, tensor: torch.Tensor, seq_len: int, batch_size: int):
         return (
@@ -152,8 +152,8 @@ class Blip2MultiHeadAttention(nn.Module):
             new_context_layer_shape
         )  # [batch_size, seq_length, embed_size]
 
-        output = self.projector(context_layer)
-        outputs = (output, attention_probs) if output_attentions else (output,)
+        output = self.projection(context_layer)
+        outputs = (output, attention_probs) if output_attentions else (output, None)
 
         return outputs
 
@@ -290,7 +290,7 @@ class Blip2VisionModel(Blip2PreTrainedModel):
         embed_dim = config.hidden_size
         self.embeddings = Blip2VisionEmbeddings(config)
         self.encoder = Blip2Encoder(config)
-        self.post_layer_norm = nn.LayerNorm(embed_dim, eps=config.layer_norm_eps)
+        self.post_layernorm = nn.LayerNorm(embed_dim, eps=config.layer_norm_eps)
 
         self.post_init()
 
@@ -324,10 +324,10 @@ class Blip2VisionModel(Blip2PreTrainedModel):
             return_dict=return_dict,
         )
         last_hidden_states = encoder_outputs[0]  # [batch_size, 1+patch_size*patch_size, hidden_size]
-        last_hidden_states = self.post_layer_norm(last_hidden_states)  # [batch_size, 1+patch_size*patch_size, hidden_size]
+        last_hidden_states = self.post_layernorm(last_hidden_states)  # [batch_size, 1+patch_size*patch_size, hidden_size]
 
         pooled_output = last_hidden_states[:, 0, :]
-        pooled_output = self.post_layer_norm(pooled_output)
+        pooled_output = self.post_layernorm(pooled_output)
 
         if not return_dict:
             return (last_hidden_states, pooled_output) + encoder_outputs[1:]
@@ -341,3 +341,6 @@ class Blip2VisionModel(Blip2PreTrainedModel):
 
     def get_input_embeddings(self) -> nn.Module:
         return self.embeddings
+
+
+

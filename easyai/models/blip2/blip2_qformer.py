@@ -4,7 +4,8 @@
 # @File: blip2_qformer
 # @Email: mlshenkai@163.com
 import math
-from typing import Optional, Tuple, Union
+import re
+from typing import Optional, Tuple, Union, Dict, Any
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -20,7 +21,7 @@ from transformers.modeling_outputs import (
     BaseModelOutputWithPoolingAndCrossAttentions,
     BaseModelOutputWithPastAndCrossAttentions,
     CausalLMOutputWithCrossAttentions,
-    ModelOutput
+    ModelOutput,
 )
 from transformers.pytorch_utils import (
     find_pruneable_heads_and_indices,
@@ -1025,12 +1026,17 @@ class Blip2QFormerLMHeadModel(Blip2PreTrainedModel):
 
 
 class Blip2QFormerCLM(Blip2PreTrainedModel):
-    def __init__(self, config: Blip2Config):
+    def __init__(
+        self, config: Blip2Config, tokenizer_pretrained_path, vision_pretrain_path
+    ):
         super().__init__(config)
         self.config: Blip2Config = config
-        self.tokenizer = self.init_tokenizer()
-
+        self.tokenizer = self.init_tokenizer(tokenizer_pretrained_path)
         self.vision_model = Blip2VisionModel(config.vision_config)
+        self.init_vision_model(vision_pretrain_path)
+        for name, param in self.vision_model.named_parameters():
+            param.requires_grad = False
+        self.vision_model = self.vision_model.eval()
         self.qformer_lm_head_model = Blip2QFormerLMHeadModel(config.qformer_config)
         # query
         query_tokens = nn.Parameter(
@@ -1049,9 +1055,9 @@ class Blip2QFormerCLM(Blip2PreTrainedModel):
         self.max_text_length = config.qformer_config.max_length
 
     @classmethod
-    def init_tokenizer(cls, truncation_side="right"):
+    def init_tokenizer(cls, tokenizer_pretrained_path, truncation_side="right"):
         tokenizer = BertTokenizer.from_pretrained(
-            "bert-base-uncased", truncation_side=truncation_side
+            tokenizer_pretrained_path, truncation_side=truncation_side
         )
         tokenizer.add_special_tokens({"bos_token": "[DEC]"})
         return tokenizer
@@ -1244,8 +1250,15 @@ class Blip2QFormerCLM(Blip2PreTrainedModel):
             loss=loss_itc + loss_itm + loss_lm,
             loss_itc=loss_itc,
             loss_itm=loss_itm,
-            loss_lm=loss_lm
+            loss_lm=loss_lm,
         )
+
+    def init_vision_model(self, vision_pretrained_path):
+        state_dict: Dict[str, Any] = torch.load(
+            vision_pretrained_path, map_location="cpu"
+        )
+        miss_key = self.vision_model.load_state_dict(state_dict)
+        return miss_key
 
 
 if __name__ == "__main__":

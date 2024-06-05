@@ -3,3 +3,4 @@
 # @Created Time: 2024/5/15 5:41 PM
 # @File: __init__.py
 # @Email: mlshenkai@163.com
+from .base_processor import BaseProcessor

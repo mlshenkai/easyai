@@ -6,4 +6,7 @@
     <orderEntry type="jdk" jdkName="Remote Python 3.9.18 (sftp://root@192.168.150.14:3402/opt/conda/envs/unilm_env/bin/python3.9)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
+  </component>
 </module>
