@@ -5,8 +5,8 @@
  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 """
 
-from lavis.common.registry import registry
-from lavis.processors.blip_processors import BlipImageBaseProcessor
+from easyai.common.registry import registry
+from easyai.data.processors.blip_processors import BlipImageBaseProcessor
 from omegaconf import OmegaConf
 from torchvision import transforms
 from torchvision.transforms.functional import InterpolationMode

@@ -12,9 +12,8 @@ from moviepy.editor import VideoFileClip
 from omegaconf import OmegaConf
 import torchaudio.compliance.kaldi as ta_kaldi
 
-from lavis.common.registry import registry
-from lavis.processors.base_processor import BaseProcessor
-from lavis.models.beats.Tokenizers import TokenizersConfig, Tokenizers
+from easyai.common.registry import registry
+from easyai.data.processors.base_processor import BaseProcessor
 
 MAX_INT = registry.get("MAX_INT")
 

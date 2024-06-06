@@ -7,9 +7,9 @@
 
 import re
 
-from lavis.common.registry import registry
-from lavis.processors.base_processor import BaseProcessor
-from lavis.processors.randaugment import RandomAugment
+from easyai.common.registry import registry
+from easyai.data.processors.base_processor import BaseProcessor
+from easyai.data.processors.randaugment import RandomAugment
 from omegaconf import OmegaConf
 from torchvision import transforms
 from torchvision.transforms.functional import InterpolationMode

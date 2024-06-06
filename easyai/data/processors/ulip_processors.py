@@ -9,11 +9,11 @@
 Adapted from ULIP codebase: https://github.com/salesforce/ULIP
 """
 
-from lavis.common.registry import registry
-from lavis.processors.blip_processors import BlipImageBaseProcessor
+from easyai.common.registry import registry
+from easyai.data.processors.blip_processors import BlipImageBaseProcessor
 from omegaconf import OmegaConf
 import torchvision.transforms as transforms
-from lavis.models.ulip_models.utils.io import IO
+from easyai.common.io import IO
 
 import numpy as np
 from PIL import Image
