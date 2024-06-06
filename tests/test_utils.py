@@ -3,8 +3,6 @@
 # @Created Time: 2024/5/24 11:58 AM
 # @File: test_utils
 # @Email: mlshenkai@163.com
-import cv2
-import torch
 import torch.nn as nn
 
 
@@ -25,9 +23,9 @@ def init_weights_with_constant(model: nn.Module, constant: float = 1.0) -> None:
 
 if __name__ == "__main__":
     from easyai.models.blip2.blip2_qformer import Blip2QFormerCLM
-    from easyai.processors.blip_processors import BlipImageEvalProcessor
+    from easyai.data.processors.blip_processors import BlipImageEvalProcessor
     from PIL import Image
-    from transformers import Blip2Config, Blip2VisionModel, Blip2Model
+    from transformers import Blip2Config
 
     config = Blip2Config()
     bert_pretrained_path = "/code-online/code/resources/models/bert-base-uncased"

@@ -11,6 +11,7 @@ class Registry:
         "task_name_mapping": {},
         "processor_name_mapping": {},
         "model_name_mapping": {},
+        "model_config_name_mapping": {},
         "lr_scheduler_name_mapping": {},
         "runner_name_mapping": {},
         "state": {},
@@ -31,7 +32,7 @@ class Registry:
         """
 
         def wrap(builder_cls):
-            from easyai.datasets.builders.base_dataset_builder import BaseDatasetBuilder
+            from easyai.data.builders.base_dataset_builder import BaseDatasetBuilder
 
             assert issubclass(
                 builder_cls, BaseDatasetBuilder
@@ -92,9 +93,10 @@ class Registry:
 
         def wrap(model_cls):
             from easyai.models import BaseModel
+            from transformers import PreTrainedModel
 
             assert issubclass(
-                model_cls, BaseModel
+                model_cls, (BaseModel, PreTrainedModel)
             ), "All models must inherit BaseModel class"
             if name in cls.mapping["model_name_mapping"]:
                 raise KeyError(
@@ -104,6 +106,25 @@ class Registry:
                 )
             cls.mapping["model_name_mapping"][name] = model_cls
             return model_cls
+
+        return wrap
+
+    @classmethod
+    def register_model_config(cls, name):
+        def wrap(model_config_cls):
+            from transformers import PretrainedConfig
+
+            assert issubclass(
+                model_config_cls, PretrainedConfig
+            ), "All models config must inherit PretrainedConfig class"
+            if name in cls.mapping["model_name_mapping"]:
+                raise KeyError(
+                    "Name '{}' already registered for {}.".format(
+                        name, cls.mapping["model_name_mapping"][name]
+                    )
+                )
+            cls.mapping["model_config_name_mapping"][name] = model_config_cls
+            return model_config_cls
 
         return wrap
 
@@ -120,7 +141,7 @@ class Registry:
         """
 
         def wrap(processor_cls):
-            from easyai.processors import BaseProcessor
+            from easyai.data.processors import BaseProcessor
 
             assert issubclass(
                 processor_cls, BaseProcessor
@@ -238,6 +259,10 @@ class Registry:
     @classmethod
     def get_task_class(cls, name):
         return cls.mapping["task_name_mapping"].get(name, None)
+
+    @classmethod
+    def get_model_config_class(cls, name):
+        return cls.mapping["model_config_name_mapping"].get(name, None)
 
     @classmethod
     def get_processor_class(cls, name):

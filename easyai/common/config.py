@@ -8,7 +8,7 @@ from loguru import logger as logging
 import json
 from typing import Dict
 
-from omegaconf import OmegaConf
+from omegaconf import OmegaConf, DictConfig
 from easyai.common.registry import registry
 
 
@@ -76,12 +76,11 @@ class Config:
             OmegaConf.load(model_config_path),
             {"model": config["model"]},
         )
-
         return model_config
 
     @staticmethod
     def build_runner_config(config):
-        return {"run": config.run}
+        return {"run": config.get("run")}
 
     @staticmethod
     def build_dataset_config(config):

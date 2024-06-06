@@ -8,9 +8,10 @@ from typing import Optional, Tuple, Union, Mapping, Any
 import torch
 import torch.nn as nn
 import torch.utils.checkpoint
-from transformers import Blip2PreTrainedModel, Blip2VisionConfig
+from transformers import Blip2PreTrainedModel
 from transformers.activations import ACT2FN
 from transformers.modeling_outputs import BaseModelOutput, BaseModelOutputWithPooling
+from easyai.models.blip2.configuration_blip2 import Blip2VisionConfig
 
 
 class Blip2VisionEmbeddings(nn.Module):

@@ -5,6 +5,7 @@
 # @Email: mlshenkai@163.com
 import os
 import torch
+from transformers.utils import ModelOutput
 
 from easyai.common.dist_utils import (
     is_dist_avail_and_initialized,
@@ -16,7 +17,7 @@ from easyai.common.logger import MetricLogger
 from easyai.common.registry import registry
 import torch.distributed as dist
 from loguru import logger as logging
-from easyai.datasets.data_utils import prepare_sample
+from easyai.data.data_utils import prepare_sample
 from easyai.common.logger import SmoothedValue
 
 
@@ -53,6 +54,8 @@ class BaseTask:
     def train_step(self, model, samples):
         output = model(samples)
         loss_dict = {}
+        if isinstance(output, ModelOutput):
+            output = dict(output.items())
         for k, v in output.items():
             if "loss" in k:
                 loss_dict[k] = v

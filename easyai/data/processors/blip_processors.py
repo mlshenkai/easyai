@@ -8,10 +8,10 @@ import re
 from omegaconf import OmegaConf
 from torchvision.transforms import InterpolationMode
 
-from easyai.processors.base_processor import BaseProcessor
+from easyai.data.processors.base_processor import BaseProcessor
 from torchvision import transforms
 
-from easyai.processors.randaugment import RandomAugment
+from easyai.data.processors.randaugment import RandomAugment
 
 
 class BlipImageBaseProcessor(BaseProcessor):

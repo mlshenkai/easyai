@@ -10,10 +10,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.checkpoint
+from omegaconf import DictConfig
 from transformers import (
     Blip2PreTrainedModel,
-    Blip2QFormerConfig,
-    Blip2Config,
     BertTokenizer,
 )
 from transformers.activations import ACT2FN
@@ -34,6 +33,9 @@ from easyai.common.dist_utils import get_rank
 from easyai.common.normalization import Fp32LayerNorm
 from easyai.models.blip2.blip2_vision import Blip2VisionModel
 from easyai.common.tensor_utils import concat_all_gather, all_gather_with_grad
+from easyai.models.blip2.base_blip2_model import Blip2BaseModel
+from easyai.common.registry import registry
+from easyai.models.blip2.configuration_blip2 import Blip2Config, Blip2QFormerConfig
 
 
 class Blip2QFormerOutputWithLoss(ModelOutput):
@@ -1025,10 +1027,18 @@ class Blip2QFormerLMHeadModel(Blip2PreTrainedModel):
         )
 
 
-class Blip2QFormerCLM(Blip2PreTrainedModel):
+@registry.register_model("blip2_qformer")
+class Blip2QFormerCLM(Blip2PreTrainedModel, Blip2BaseModel):
+    PRETRAINED_MODEL_CONFIG_DICT = {
+        "pretrain": "configs/models/blip2/blip2_qformer.yaml"
+    }
+    config_class = Blip2Config
+
     def __init__(
-        self, config: Blip2Config, tokenizer_pretrained_path, vision_pretrain_path
+        self, config: Optional[Blip2Config, DictConfig], tokenizer_pretrained_path, vision_pretrain_path
     ):
+        if isinstance(config, DictConfig):
+            config = self.config_class(**config)
         super().__init__(config)
         self.config: Blip2Config = config
         self.tokenizer = self.init_tokenizer(tokenizer_pretrained_path)

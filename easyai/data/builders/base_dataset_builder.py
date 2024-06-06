@@ -13,7 +13,7 @@ from loguru import logger as logging
 from easyai.common import utils
 from easyai.common.dist_utils import is_main_process, is_dist_avail_and_initialized
 from easyai.common.utils import download_url
-from easyai.processors.base_processor import BaseProcessor
+from easyai.data.processors import BaseProcessor
 from easyai.common.registry import registry
 
 
