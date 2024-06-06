@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 # @Author: watcher
-# @Created Time: 2024/6/5 下午2:55
-# @File: base_task
 # @Email: mlshenkai@163.com
-import os
-import torch
-from transformers.utils import ModelOutput
 
-from easyai.common.dist_utils import (
-    is_dist_avail_and_initialized,
-    get_rank,
-    is_main_process,
-    get_world_size,
-)
-from easyai.common.logger import MetricLogger
-from easyai.common.registry import registry
+import logging
+import os
+
+import torch
 import torch.distributed as dist
-from loguru import logger as logging
+from easyai.common.dist_utils import (
+    get_rank,
+    get_world_size,
+    is_main_process,
+    is_dist_avail_and_initialized,
+)
+from easyai.common.logger import MetricLogger, SmoothedValue
+from easyai.common.registry import registry
 from easyai.data.data_utils import prepare_sample
-from easyai.common.logger import SmoothedValue
 
 
 class BaseTask:
@@ -29,16 +26,28 @@ class BaseTask:
 
     @classmethod
     def setup_task(cls, **kwargs):
-        return cls(**kwargs)
+        return cls()
 
     def build_model(self, cfg):
         model_config = cfg.model_cfg
 
         model_cls = registry.get_model_class(model_config.arch)
-        return model_cls.from_cfg(model_config)
+        return model_cls.from_config(model_config)
 
     def build_datasets(self, cfg):
-        datasets = {}
+        """
+        Build a dictionary of datasets, keyed by split 'train', 'valid', 'test'.
+        Download dataset and annotations automatically if not exist.
+
+        Args:
+            cfg (common.config.Config): _description_
+
+        Returns:
+            dict: Dictionary of torch.utils.data.Dataset objects by split.
+        """
+
+        datasets = dict()
+
         datasets_config = cfg.datasets_cfg
 
         assert len(datasets_config) > 0, "At least one dataset has to be specified."
@@ -47,6 +56,7 @@ class BaseTask:
             dataset_config = datasets_config[name]
             builder = registry.get_builder_class(name)(dataset_config)
             dataset = builder.build_datasets()
+
             datasets[name] = dataset
 
         return datasets
@@ -54,8 +64,6 @@ class BaseTask:
     def train_step(self, model, samples):
         output = model(samples)
         loss_dict = {}
-        if isinstance(output, ModelOutput):
-            output = dict(output.items())
         for k, v in output.items():
             if "loss" in k:
                 loss_dict[k] = v
