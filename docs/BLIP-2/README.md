@@ -8,6 +8,9 @@
 
 #### Demo地址： https://link.zhihu.com/?target=https%3A//huggingface.co/spaces/Salesforce/BLIP2
 
+#### 知乎: https://zhuanlan.zhihu.com/p/698069132
+
+
 ### 1.1 背景和动机
 视觉语言训练 (Vision-Language Pre-training, VLP) 的研究在过去几年中取得了快速的发展，研究者们开发了规模越来越大的预训练模型，不断推动各种下游任务的发展。但是，因为使用了大模型。大数据集，而且采取了端到端的训练，大多数最先进的视觉语言模型在预训练过程中会产生很高的计算代价和经济成本。
 
