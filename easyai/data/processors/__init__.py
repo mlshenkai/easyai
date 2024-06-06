@@ -18,8 +18,14 @@ from easyai.data.processors.blip_processors import (
     BlipImageEvalProcessor,
     BlipQuestionProcessor,
 )
-from easyai.data.processors.clip_processors import ClipImageTrainProcessor, ClipImageEvalProcessor
-from easyai.data.processors.gpt_processors import GPTDialogueProcessor, GPTVideoFeatureProcessor
+from easyai.data.processors.clip_processors import (
+    ClipImageTrainProcessor,
+    ClipImageEvalProcessor,
+)
+from easyai.data.processors.gpt_processors import (
+    GPTDialogueProcessor,
+    GPTVideoFeatureProcessor,
+)
 from easyai.common.registry import registry
 
 __all__ = [
@@ -37,6 +43,7 @@ __all__ = [
     "GPTVideoFeatureProcessor",
     "GPTDialogueProcessor",
 ]
+
 
 def load_processor(name, cfg=None):
     """

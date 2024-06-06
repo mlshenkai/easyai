@@ -93,7 +93,10 @@ class RunnerIter(RunnerBase):
                 self.log_stats(split_name="train", stats=train_stats)
 
             # evaluation phase
-            if len(self.valid_splits) > 0 and (self.evaluate_only or (end_iters//self.iters_per_inner_epoch)%self.val_freq == 0):
+            if len(self.valid_splits) > 0 and (
+                self.evaluate_only
+                or (end_iters // self.iters_per_inner_epoch) % self.val_freq == 0
+            ):
                 for split_name in self.valid_splits:
                     logging.info("Evaluating on {}.".format(split_name))
 

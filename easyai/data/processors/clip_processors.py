@@ -21,7 +21,6 @@ class ClipImageTrainProcessor(BlipImageBaseProcessor):
     def __init__(
         self, image_size=224, mean=None, std=None, min_scale=0.9, max_scale=1.0
     ):
-
         super().__init__(mean=mean, std=std)
 
         self.transform = transforms.Compose(
@@ -62,7 +61,6 @@ class ClipImageTrainProcessor(BlipImageBaseProcessor):
 @registry.register_processor("clip_image_eval")
 class ClipImageEvalProcessor(BlipImageBaseProcessor):
     def __init__(self, image_size=224, mean=None, std=None):
-
         super().__init__(mean=mean, std=std)
 
         self.transform = transforms.Compose(

@@ -35,7 +35,7 @@ class BeatsAudioProcessor(BaseProcessor):
         self.is_eval = is_eval
 
     def _load_audio(self, aupath):
-        if aupath.endswith('.mp4'):
+        if aupath.endswith(".mp4"):
             video = VideoFileClip(aupath)
             audio_np = video.audio.to_soundarray(fps=self.sampling_rate)
             if len(audio_np.shape) == 2:
@@ -44,7 +44,7 @@ class BeatsAudioProcessor(BaseProcessor):
             sr = self.sampling_rate
         else:
             waveform, sr = torchaudio.load(aupath)
-            if waveform.shape[0] == 2: 
+            if waveform.shape[0] == 2:
                 waveform = torch.mean(waveform, dim=0)
             if sr != self.sampling_rate:
                 resampler = torchaudio.transforms.Resample(sr, self.sampling_rate)
@@ -58,13 +58,14 @@ class BeatsAudioProcessor(BaseProcessor):
         Returns:
             torch.tensor: audio clip after transforms.
         """
+
         # Helper function to return empty tensor for invalid audio
         def empty_audio_tensor():
             return torch.zeros((self.n_frames, self.frame_length, 128))
-        
+
         try:
             # Handle MP4 files
-            if aupath.endswith('.mp4'):
+            if aupath.endswith(".mp4"):
                 video = VideoFileClip(aupath)
                 if start_sec is not None and end_sec is not None:
                     video = video.subclip(start_sec, end_sec)
@@ -115,14 +116,20 @@ class BeatsAudioProcessor(BaseProcessor):
             fbank_pad_len = self.frame_length * self.n_frames - fbank.shape[0]
             if fbank_pad_len > 0:
                 fbank = torch.nn.ZeroPad2d((0, 0, 0, fbank_pad_len))(fbank)
-            fbank = fbank[:self.frame_length * self.n_frames]
-            frames = [fbank[i*self.frame_length:(i+1)*self.frame_length].unsqueeze(0) for i in range(self.n_frames)]
+            fbank = fbank[: self.frame_length * self.n_frames]
+            frames = [
+                fbank[i * self.frame_length : (i + 1) * self.frame_length].unsqueeze(0)
+                for i in range(self.n_frames)
+            ]
         else:
             fbank_pad_len = fbank.shape[0] % self.frame_length
             if fbank_pad_len > 0:
                 fbank = torch.nn.ZeroPad2d((0, 0, 0, fbank_pad_len))(fbank)
             curr_frames = fbank.shape[0] // self.frame_length
-            frames = [fbank[i*self.frame_length:(i+1)*self.frame_length].unsqueeze(0) for i in range(curr_frames)]
+            frames = [
+                fbank[i * self.frame_length : (i + 1) * self.frame_length].unsqueeze(0)
+                for i in range(curr_frames)
+            ]
 
         return torch.cat(frames, dim=0)
 
@@ -132,9 +139,9 @@ class BeatsAudioProcessor(BaseProcessor):
             cfg = OmegaConf.create()
 
         return cls(
-            model_name=cfg.get("model_name", 'iter3'),
+            model_name=cfg.get("model_name", "iter3"),
             sampling_rate=cfg.get("sampling_rate", 16000),
             n_frames=cfg.get("n_frames", 2),
             frame_length=cfg.get("frame_length", 512),
-            is_eval=cfg.get("is_eval", False)
+            is_eval=cfg.get("is_eval", False),
         )

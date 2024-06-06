@@ -1035,7 +1035,10 @@ class Blip2QFormerCLM(Blip2PreTrainedModel, Blip2BaseModel):
     config_class = Blip2Config
 
     def __init__(
-        self, config: Optional[Blip2Config, DictConfig], tokenizer_pretrained_path, vision_pretrain_path
+        self,
+        config: Optional[Blip2Config, DictConfig],
+        tokenizer_pretrained_path,
+        vision_pretrain_path,
     ):
         if isinstance(config, DictConfig):
             config = self.config_class(**config)

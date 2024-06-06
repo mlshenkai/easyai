@@ -17,70 +17,70 @@ import random
 import nltk
 import pickle
 
-TEMPLATES = {"image":{}, "pc":{}, "audio":{}, "video":{}}
+TEMPLATES = {"image": {}, "pc": {}, "audio": {}, "video": {}}
 
 
 TEMPLATES["video"]["qa"] = [
-"Given the video, {}",
-"Q: {} A:",
-"Answer the following question based on the video: {}",
-"Question: {} Answer:",
-"How would you answer {} after watching the video?",
-"What is the answer to the question {} after viewing the video?",
-"Answer the question based on the video. Question: {} Answer: ",
-"Instruction: Answer the following question by reference to the input video. Question: {} Answer:",
-"Given the video, what is the answer to the question {}?",
-"What's your response to the query {} after watching the video?",
-"Please provide an answer to {} after watching the video",
-"Respond to the query {} based on the video",
-"Based on the given video, respond to {}",
-"Question: {} What's your response after watching the video?",
-"Consider the following query: {}",
-"Could you help answer the question {}?",
-"Referencing the provided video, can you answer the question {}?",
-"With respect to the video shown, please answer {}",
-"What's your answer to {} in the context of the provided video?",
-"Question (refer to the video for context): {} Answer:",
-"In response to the question {}, what would your answer be after viewing the video?"
+    "Given the video, {}",
+    "Q: {} A:",
+    "Answer the following question based on the video: {}",
+    "Question: {} Answer:",
+    "How would you answer {} after watching the video?",
+    "What is the answer to the question {} after viewing the video?",
+    "Answer the question based on the video. Question: {} Answer: ",
+    "Instruction: Answer the following question by reference to the input video. Question: {} Answer:",
+    "Given the video, what is the answer to the question {}?",
+    "What's your response to the query {} after watching the video?",
+    "Please provide an answer to {} after watching the video",
+    "Respond to the query {} based on the video",
+    "Based on the given video, respond to {}",
+    "Question: {} What's your response after watching the video?",
+    "Consider the following query: {}",
+    "Could you help answer the question {}?",
+    "Referencing the provided video, can you answer the question {}?",
+    "With respect to the video shown, please answer {}",
+    "What's your answer to {} in the context of the provided video?",
+    "Question (refer to the video for context): {} Answer:",
+    "In response to the question {}, what would your answer be after viewing the video?",
 ]
 
 TEMPLATES["video"]["classification"] = [
-"Identify the objects in this video:",
-"What objects can you spot in the clip?",
-"Classify the objects in the video:",
-"Name the objects visible in the video:",
-"Identify and classify the objects in this video:",
-"What type of objects are in the video?",
-"Classify the main object in the clip:",
-"Identify the primary object in this video:",
-"Name the main object visible in the clip:",
-"What is the central object in the video?",
-"Can you classify the central object in this video?",
-"Determine the type of the main object in this video:",
-"What objects do you identify in the video?",
-"Please classify the objects in the video:",
-"Please identify the main object in the video:",
-"What kind of object is displayed in the video?",
-"What object is predominantly featured in the video?",
-"Classify the object that is the focus of this video:",
-"What is the main object in the video?",
-"Identify the primary object in the video:"
+    "Identify the objects in this video:",
+    "What objects can you spot in the clip?",
+    "Classify the objects in the video:",
+    "Name the objects visible in the video:",
+    "Identify and classify the objects in this video:",
+    "What type of objects are in the video?",
+    "Classify the main object in the clip:",
+    "Identify the primary object in this video:",
+    "Name the main object visible in the clip:",
+    "What is the central object in the video?",
+    "Can you classify the central object in this video?",
+    "Determine the type of the main object in this video:",
+    "What objects do you identify in the video?",
+    "Please classify the objects in the video:",
+    "Please identify the main object in the video:",
+    "What kind of object is displayed in the video?",
+    "What object is predominantly featured in the video?",
+    "Classify the object that is the focus of this video:",
+    "What is the main object in the video?",
+    "Identify the primary object in the video:",
 ]
 
 TEMPLATES["video"]["caption"] = [
-"A short caption for the video:",
-"A short description of the video:",
-"A video of",
-"A video that shows",
-"Describe the video briefly.",
-"Write a description for the video.",
-"Provide a description of what is presented in the video.",
-"Briefly describe the content of the video.",
-"Can you briefly explain what you see in the video?",
-"Could you use a few words to describe what you perceive in the video?",
-"Please provide a short description of the video.",
-"Using language, provide a short account of the video.",
-"Use a few words to illustrate what is happening in the video."
+    "A short caption for the video:",
+    "A short description of the video:",
+    "A video of",
+    "A video that shows",
+    "Describe the video briefly.",
+    "Write a description for the video.",
+    "Provide a description of what is presented in the video.",
+    "Briefly describe the content of the video.",
+    "Can you briefly explain what you see in the video?",
+    "Could you use a few words to describe what you perceive in the video?",
+    "Please provide a short description of the video.",
+    "Using language, provide a short account of the video.",
+    "Use a few words to illustrate what is happening in the video.",
 ]
 
 TEMPLATES["image"]["qa"] = [
@@ -130,7 +130,7 @@ TEMPLATES["image"]["qa"] = [
     "Bearing in mind the characteristics of the image, how would you elucidate {}?",
     "Gauging by the image, {}",
     "In accordance with the image's specifications, {}",
-    "Drawing insights from the image, {}"
+    "Drawing insights from the image, {}",
 ]
 
 TEMPLATES["image"]["classification"] = [
@@ -153,7 +153,7 @@ TEMPLATES["image"]["classification"] = [
     "What object is predominantly featured in the photo?",
     "Classify the object that is the focus of this image:",
     "What is the main object in the picture?",
-    "Identify the primary object in the photo:"
+    "Identify the primary object in the photo:",
 ]
 
 TEMPLATES["image"]["caption"] = [
@@ -210,9 +210,8 @@ TEMPLATES["image"]["caption"] = [
     "Enumerate the elements you see in this image.",
     "Characterize the essence of this picture.",
     "Relate the story depicted in this image.",
-    "Describe this image as if speaking to someone who can't see it."
-    ]
-
+    "Describe this image as if speaking to someone who can't see it.",
+]
 
 
 TEMPLATES["audio"]["caption"] = [
@@ -239,7 +238,7 @@ TEMPLATES["audio"]["caption"] = [
     "Could you provide a concise explanation of the audio's contents?",
     "Describe what the audio represents.",
     "What is the audio depicting?",
-    "In a few words, describe what you hear in the audio."
+    "In a few words, describe what you hear in the audio.",
 ]
 
 
@@ -256,7 +255,7 @@ TEMPLATES["audio"]["classification"] = [
     "How would you classify this audio clip?",
     "Please identify the category of the following audio:",
     "What category does the following audio fall into?",
-    "Classify the sounds in this audio clip."
+    "Classify the sounds in this audio clip.",
 ]
 
 TEMPLATES["audio"]["qa"] = [
@@ -285,7 +284,7 @@ TEMPLATES["audio"]["qa"] = [
     "In response to the question {}, what would your answer be based on the audio?",
     "Given the audio, how would you respond to {}?",
     "Taking the audio into consideration, what is your response to {}?",
-    "Based on the audio, how would you answer {}?"
+    "Based on the audio, how would you answer {}?",
 ]
 
 TEMPLATES["pc"]["caption"] = [
@@ -333,7 +332,7 @@ TEMPLATES["pc"]["caption"] = [
     "Enumerate the elements you see in this 3D model.",
     "Characterize the essence of this 3D model.",
     "Relate the story depicted in this 3D model.",
-    "Describe this 3D model as if speaking to someone who can't see it."
+    "Describe this 3D model as if speaking to someone who can't see it.",
 ]
 
 TEMPLATES["pc"]["classification"] = [
@@ -349,7 +348,7 @@ TEMPLATES["pc"]["classification"] = [
     "How would you classify this 3D model?",
     "Please identify the category of the following 3D model:",
     "What category does the following 3D model fall into?",
-    "Classify the structures in this 3D model."
+    "Classify the structures in this 3D model.",
 ]
 
 TEMPLATES["pc"]["qa"] = [
@@ -404,7 +403,7 @@ TEMPLATES["pc"]["qa"] = [
     "Bearing in mind the characteristics of the 3D model, how would you elucidate {}?",
     "Gauging by the 3D model, {}",
     "In accordance with the 3D model's specifications, {}",
-    "Drawing insights from the 3D model, {}"
+    "Drawing insights from the 3D model, {}",
 ]
 
 
@@ -415,50 +414,60 @@ class BlipInstructionProcessor(BaseProcessor):
         self.max_words = max_words
         self.modality = modality
         self.task = task
-        if task == 'classification':
-            ## download cmu_dict and save it as pickle file 
+        if task == "classification":
+            ## download cmu_dict and save it as pickle file
             if cmu_dict_path:
-                self.pronounciations = pickle.load(open(cmu_dict_path, 'rb'))
+                self.pronounciations = pickle.load(open(cmu_dict_path, "rb"))
             else:
                 # try:
                 #     nltk.download('cmudict')
                 # except:
                 #     pass
                 from nltk.corpus import cmudict
+
                 self.pronounciations = cmudict.dict()
-            
-           
+
     def classification_output(self, label):
-        if self.starts_with_vowel_sound(label) or label[0] in 'aeiou':
-            label = 'an ' + label
+        if self.starts_with_vowel_sound(label) or label[0] in "aeiou":
+            label = "an " + label
         else:
-            label = 'a ' + label
+            label = "a " + label
         if self.modality == "audio":
-            prompts = ["This is ", "It is ", "I hear ", "The audio is ", "This is the sound of ", ""]
+            prompts = [
+                "This is ",
+                "It is ",
+                "I hear ",
+                "The audio is ",
+                "This is the sound of ",
+                "",
+            ]
         else:
             prompts = ["", "This is ", "It is "]
-        caption = random.choice(prompts) +  label
+        caption = random.choice(prompts) + label
         return caption.lower()
-    
-    def starts_with_vowel_sound(self,word):
+
+    def starts_with_vowel_sound(self, word):
         for syllables in self.pronounciations.get(word, []):
             return syllables[0][-1].isdigit()  # use only the first one
-                
 
     def __call__(self, caption):
-        if self.task == 'eval':
+        if self.task == "eval":
             if caption == "":
                 caption = self.prompt
             else:
                 caption = self.pre_caption(caption)
             return caption
-        if caption == "" and self.task == 'caption':
+        if caption == "" and self.task == "caption":
             caption = self.prompt + random.choice(TEMPLATES[self.modality][self.task])
-        elif self.task == 'qa':
-            caption = self.prompt + random.choice(TEMPLATES[self.modality][self.task]).format(caption).replace('??', '?')
-        elif self.task == 'classification':
+        elif self.task == "qa":
+            caption = self.prompt + random.choice(
+                TEMPLATES[self.modality][self.task]
+            ).format(caption).replace("??", "?")
+        elif self.task == "classification":
             if caption == "":
-                caption = self.prompt + random.choice(TEMPLATES[self.modality][self.task])
+                caption = self.prompt + random.choice(
+                    TEMPLATES[self.modality][self.task]
+                )
             else:
                 caption = self.classification_output(caption)
         else:
@@ -473,13 +482,19 @@ class BlipInstructionProcessor(BaseProcessor):
 
         prompt = cfg.get("prompt", "")
         max_words = cfg.get("max_words", 50)
-        modality = cfg.get("modality", 'image')
-        task = cfg.get("task", 'caption')
+        modality = cfg.get("modality", "image")
+        task = cfg.get("task", "caption")
         cmu_dict_path = cfg.get("cmu_dict_path", None)
-        return classification(prompt=prompt, max_words=max_words, modality=modality, task=task, cmu_dict_path=cmu_dict_path)
+        return classification(
+            prompt=prompt,
+            max_words=max_words,
+            modality=modality,
+            task=task,
+            cmu_dict_path=cmu_dict_path,
+        )
 
     def pre_caption(self, caption):
-        if isinstance(caption,list):
+        if isinstance(caption, list):
             caption = random.choice(caption)
         caption = re.sub(
             r"([.!\"()*#:;~])",

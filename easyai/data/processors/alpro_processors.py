@@ -93,7 +93,7 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
         super().__init__(mean=mean, std=std, n_frms=n_frms)
 
         self.image_size = image_size
-        self.full_video=full_video
+        self.full_video = full_video
 
         self.transform = transforms.Compose(
             [
@@ -135,7 +135,7 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
             torch.tensor: video clip after transforms. Size is (C, T, size, size).
         """
         if self.full_video:
-            clip = load_video( ## initial LAVIS code has errors when loading video.
+            clip = load_video(  ## initial LAVIS code has errors when loading video.
                 video_path=vpath,
                 n_frms=self.n_frms,
                 height=self.image_size,
@@ -143,29 +143,29 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
                 sampling="headtail",
             )
             # clip = load_clip(
-            #     video_path=vpath, 
-            #     num_frames=self.n_frms, 
-            #     target_height=self.image_size, 
+            #     video_path=vpath,
+            #     num_frames=self.n_frms,
+            #     target_height=self.image_size,
             #     target_width=self.image_size,
             #     start_time=start_sec,
-            #     end_time=end_sec, 
+            #     end_time=end_sec,
             #     sampling="headtail"
             #     )
         else:
             clip = load_clip(
-                video_path=vpath, 
-                num_frames=self.n_frms, 
-                target_height=self.image_size, 
+                video_path=vpath,
+                num_frames=self.n_frms,
+                target_height=self.image_size,
                 target_width=self.image_size,
                 start_time=start_sec,
-                end_time=end_sec, 
-                sampling="headtail"
-                )
+                end_time=end_sec,
+                sampling="headtail",
+            )
         transformed = self.transform(clip)
 
         ## repeat last frame for padding
         pad_size = self.n_frms - transformed.shape[1]
-        if pad_size>0:
+        if pad_size > 0:
             last_frame = transformed[:, -1, :, :].unsqueeze(1)
             repeat_frames = last_frame.repeat(1, pad_size, 1, 1)
             transformed = torch.cat([transformed, repeat_frames], dim=1)
@@ -195,17 +195,19 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
             min_scale=min_scale,
             max_scale=max_scale,
             n_frms=n_frms,
-            full_video=full_video
+            full_video=full_video,
         )
 
 
 @registry.register_processor("alpro_video_eval")
 class AlproVideoEvalProcessor(AlproVideoBaseProcessor):
-    def __init__(self, image_size=256, mean=None, std=None, n_frms=MAX_INT,  full_video=True):
+    def __init__(
+        self, image_size=256, mean=None, std=None, n_frms=MAX_INT, full_video=True
+    ):
         super().__init__(mean=mean, std=std, n_frms=n_frms)
 
         self.image_size = image_size
-        self.full_video=full_video
+        self.full_video = full_video
 
         # Input video size is (C, T, H, W)
         self.transform = transforms.Compose(
@@ -227,29 +229,29 @@ class AlproVideoEvalProcessor(AlproVideoBaseProcessor):
         """
         if self.full_video:
             clip = load_clip(
-                video_path=vpath, 
-                num_frames=self.n_frms, 
-                target_height=self.image_size, 
+                video_path=vpath,
+                num_frames=self.n_frms,
+                target_height=self.image_size,
                 target_width=self.image_size,
                 start_time=start_sec,
-                end_time=end_sec, 
-                sampling="headtail"
-                )
+                end_time=end_sec,
+                sampling="headtail",
+            )
         else:
             clip = load_clip(
-                video_path=vpath, 
-                num_frames=self.n_frms, 
-                target_height=self.image_size, 
+                video_path=vpath,
+                num_frames=self.n_frms,
+                target_height=self.image_size,
                 target_width=self.image_size,
                 start_time=start_sec,
-                end_time=end_sec, 
-                sampling="headtail"
-                )
+                end_time=end_sec,
+                sampling="headtail",
+            )
         transformed = self.transform(clip)
 
         ## repeat last frame for padding
         pad_size = self.n_frms - transformed.shape[1]
-        if pad_size>0:
+        if pad_size > 0:
             last_frame = transformed[:, -1, :, :].unsqueeze(1)
             repeat_frames = last_frame.repeat(1, pad_size, 1, 1)
             transformed = torch.cat([transformed, repeat_frames], dim=1)
@@ -269,4 +271,10 @@ class AlproVideoEvalProcessor(AlproVideoBaseProcessor):
 
         n_frms = cfg.get("n_frms", MAX_INT)
 
-        return cls(image_size=image_size, mean=mean, std=std, n_frms=n_frms, full_video=full_video)
+        return cls(
+            image_size=image_size,
+            mean=mean,
+            std=std,
+            n_frms=n_frms,
+            full_video=full_video,
+        )

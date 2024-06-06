@@ -5,7 +5,7 @@
 # @Email: mlshenkai@163.com
 from easyai.models import BaseModel
 
+
 class Blip2BaseModel(BaseModel):
     def __init__(self):
         super().__init__()
-

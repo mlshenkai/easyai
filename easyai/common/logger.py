@@ -134,7 +134,7 @@ class MetricLogger(object):
             "{meters}",
             "time: {time}",
             "data: {data}",
-            ]
+        ]
         if torch.cuda.is_available():
             log_msg.append("max mem: {memory:.0f}")
         log_msg = self.delimiter.join(log_msg)
@@ -184,5 +184,3 @@ class AttrDict(dict):
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
-
-

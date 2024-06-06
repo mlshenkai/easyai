@@ -63,9 +63,9 @@ class Blip2VisionEmbeddings(nn.Module):
             [class_embeds, patch_embeds], dim=1
         )  # [batch_size, patch_size*patch_size+1, embed_dim]
 
-        embeddings = embeddings + self.position_embedding[:, : embeddings.size(1), :].to(
-            target_dtype
-        )
+        embeddings = embeddings + self.position_embedding[
+            :, : embeddings.size(1), :
+        ].to(target_dtype)
         return embeddings
 
 
@@ -316,7 +316,9 @@ class Blip2VisionModel(Blip2PreTrainedModel):
             return_dict if return_dict is not None else self.config.use_return_dict
         )
 
-        hidden_states = self.embeddings(pixel_values)  # [batch_size, 1+patch_size*patch_size, hidden_size]
+        hidden_states = self.embeddings(
+            pixel_values
+        )  # [batch_size, 1+patch_size*patch_size, hidden_size]
 
         encoder_outputs = self.encoder(
             input_embeds=hidden_states,
@@ -324,8 +326,12 @@ class Blip2VisionModel(Blip2PreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
-        last_hidden_states = encoder_outputs[0]  # [batch_size, 1+patch_size*patch_size, hidden_size]
-        last_hidden_states = self.post_layernorm(last_hidden_states)  # [batch_size, 1+patch_size*patch_size, hidden_size]
+        last_hidden_states = encoder_outputs[
+            0
+        ]  # [batch_size, 1+patch_size*patch_size, hidden_size]
+        last_hidden_states = self.post_layernorm(
+            last_hidden_states
+        )  # [batch_size, 1+patch_size*patch_size, hidden_size]
 
         pooled_output = last_hidden_states[:, 0, :]
         pooled_output = self.post_layernorm(pooled_output)
@@ -342,6 +348,3 @@ class Blip2VisionModel(Blip2PreTrainedModel):
 
     def get_input_embeddings(self) -> nn.Module:
         return self.embeddings
-
-
-

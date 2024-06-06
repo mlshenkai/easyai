@@ -191,7 +191,6 @@ class BlipImageEvalProcessor(BlipImageBaseProcessor):
 
 
 class Blip2ImageTrainProcessor(BlipImageBaseProcessor):
-
     def __init__(
         self, image_size=364, mean=None, std=None, min_scale=0.5, max_scale=1.0
     ):

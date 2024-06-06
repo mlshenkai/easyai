@@ -137,7 +137,7 @@ def concat_datasets(datasets):
     for split_name in datasets:
         if split_name != "train":
             assert (
-                    len(datasets[split_name]) == 1
+                len(datasets[split_name]) == 1
             ), "Do not support multiple {} datasets.".format(split_name)
             datasets[split_name] = datasets[split_name][0]
         else:
@@ -286,7 +286,9 @@ def save_frames_grid(img_array, out_path):
     img.save(out_path)
 
 
-def uniform_frame_sampling(video_path, num_frames, target_height, target_width, start_time=None, end_time=None):
+def uniform_frame_sampling(
+    video_path, num_frames, target_height, target_width, start_time=None, end_time=None
+):
     cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
@@ -298,7 +300,9 @@ def uniform_frame_sampling(video_path, num_frames, target_height, target_width, 
 
     start_frame = int(start_time * frame_rate)
     end_frame = int(end_time * frame_rate)
-    frame_indices = list(range(start_frame, end_frame + 1, (end_frame - start_frame + 1) // num_frames))
+    frame_indices = list(
+        range(start_frame, end_frame + 1, (end_frame - start_frame + 1) // num_frames)
+    )
 
     frames = []
     for frame_index in frame_indices:
@@ -313,7 +317,9 @@ def uniform_frame_sampling(video_path, num_frames, target_height, target_width, 
     return frames
 
 
-def head_tail_frame_sampling(video_path, num_frames, target_height, target_width, start_time=None, end_time=None):
+def head_tail_frame_sampling(
+    video_path, num_frames, target_height, target_width, start_time=None, end_time=None
+):
     cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
@@ -325,7 +331,14 @@ def head_tail_frame_sampling(video_path, num_frames, target_height, target_width
 
     start_frame = int(start_time * frame_rate)
     end_frame = int(end_time * frame_rate)
-    frame_indices = [start_frame] + [start_frame + (end_frame - start_frame) // (num_frames - 1) * i for i in range(1, num_frames - 1)] + [end_frame]
+    frame_indices = (
+        [start_frame]
+        + [
+            start_frame + (end_frame - start_frame) // (num_frames - 1) * i
+            for i in range(1, num_frames - 1)
+        ]
+        + [end_frame]
+    )
 
     frames = []
     for frame_index in frame_indices:
@@ -339,13 +352,27 @@ def head_tail_frame_sampling(video_path, num_frames, target_height, target_width
     cap.release()
     if len(frames) == 0:
         return None
-    return torch.stack([torch.tensor(f).permute(2,0,1).float() for f in frames], dim=1)
+    return torch.stack(
+        [torch.tensor(f).permute(2, 0, 1).float() for f in frames], dim=1
+    )
 
 
-def load_clip(video_path, num_frames, target_height, target_width, start_time=None, end_time=None, sampling="headtail"):
+def load_clip(
+    video_path,
+    num_frames,
+    target_height,
+    target_width,
+    start_time=None,
+    end_time=None,
+    sampling="headtail",
+):
     if sampling == "headtail":
-        return head_tail_frame_sampling(video_path, num_frames, target_height, target_width, start_time, end_time)
+        return head_tail_frame_sampling(
+            video_path, num_frames, target_height, target_width, start_time, end_time
+        )
     elif sampling == "uniform":
-        return uniform_frame_sampling(video_path, num_frames, target_height, target_width, start_time, end_time)
+        return uniform_frame_sampling(
+            video_path, num_frames, target_height, target_width, start_time, end_time
+        )
     else:
         raise NotImplementedError
