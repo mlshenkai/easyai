@@ -1,9 +1,8 @@
-"""
- Copyright (c) 2022, salesforce.com, inc.
- All rights reserved.
- SPDX-License-Identifier: BSD-3-Clause
- For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
-"""
+# -*- coding: utf-8 -*-
+# @Author: watcher
+# @Created Time: 2024/5/15 5:40 PM
+# @File: __init__.py
+# @Email: mlshenkai@163.com
 
 from collections import OrderedDict
 import json

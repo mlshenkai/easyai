@@ -1,9 +1,8 @@
-"""
- Copyright (c) 2022, salesforce.com, inc.
- All rights reserved.
- SPDX-License-Identifier: BSD-3-Clause
- For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
-"""
+# -*- coding: utf-8 -*-
+# @Author: watcher
+# @Created Time: 2024/5/15 5:40 PM
+# @File: __init__.py
+# @Email: mlshenkai@163.com
 
 # Adapted from https://github.com/salesforce/ULIP/blob/48d8d00b1cdb2aee79005817a202816f1c521911/models/pointnext/PointNeXt/openpoints/dataset/modelnet/modelnet40_normal_resampled_loader.py
 
