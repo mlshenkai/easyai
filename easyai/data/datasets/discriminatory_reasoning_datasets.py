@@ -10,7 +10,7 @@ from PIL import Image
 import copy
 
 from easyai.data.datasets.base_dataset import BaseDataset
-from lavis.common.utils import is_serializable
+from easyai.common.utils import is_serializable
 
 
 class __DisplMixin:
@@ -41,7 +41,7 @@ class DisCRnDataset(BaseDataset, __DisplMixin):
 
         self.ds_name = kwargs["dataset_name"]
         self.modalities = [str(m) for m in kwargs["modalities"]]
-        ## from lavis convention, sometimes "image" modality is denoted as images
+        ## from easyai convention, sometimes "image" modality is denoted as images
         if "images" in self.modalities:
             self.modalities[self.modalities.index("images")] = "image"
         self.npoints = 8192

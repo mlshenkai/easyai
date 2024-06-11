@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.checkpoint
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 from transformers import (
     Blip2PreTrainedModel,
     BertTokenizer,
@@ -1029,16 +1029,14 @@ class Blip2QFormerLMHeadModel(Blip2PreTrainedModel):
 
 @registry.register_model("blip2_qformer")
 class Blip2QFormerCLM(Blip2PreTrainedModel, Blip2BaseModel):
-    PRETRAINED_MODEL_CONFIG_DICT = {
-        "pretrain": "configs/models/blip2/blip2_qformer.yaml"
-    }
     config_class = Blip2Config
 
     def __init__(
         self,
-        config: Optional[Blip2Config, DictConfig],
+        config: Blip2Config or DictConfig,
         tokenizer_pretrained_path,
         vision_pretrain_path,
+        **kwargs
     ):
         if isinstance(config, DictConfig):
             config = self.config_class(**config)

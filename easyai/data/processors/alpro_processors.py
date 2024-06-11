@@ -5,12 +5,12 @@
 # @Email: mlshenkai@163.com
 
 import torch
-from lavis.common.registry import registry
-from lavis.datasets.data_utils import load_video, load_clip
-from lavis.processors import transforms_video
-from lavis.processors.base_processor import BaseProcessor
-from lavis.processors.randaugment import VideoRandomAugment
-from lavis.processors import functional_video as F
+from easyai.common.registry import registry
+from easyai.data.data_utils import load_video, load_clip
+from easyai.data.processors import transforms_video
+from easyai.data.processors.base_processor import BaseProcessor
+from easyai.data.processors.randaugment import VideoRandomAugment
+from easyai.data.processors import functional_video as F
 from omegaconf import OmegaConf
 from torchvision import transforms
 
@@ -134,7 +134,7 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
             torch.tensor: video clip after transforms. Size is (C, T, size, size).
         """
         if self.full_video:
-            clip = load_video(  ## initial LAVIS code has errors when loading video.
+            clip = load_video(  ## initial easyai code has errors when loading video.
                 video_path=vpath,
                 n_frms=self.n_frms,
                 height=self.image_size,

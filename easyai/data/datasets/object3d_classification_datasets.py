@@ -15,7 +15,7 @@ import copy
 import random
 import pickle
 from PIL import Image
-from lavis.processors.ulip_processors import farthest_point_sample, pc_normalize
+from easyai.data.processors.ulip_processors import farthest_point_sample, pc_normalize
 from easyai.data.datasets.base_dataset import BaseDataset
 
 

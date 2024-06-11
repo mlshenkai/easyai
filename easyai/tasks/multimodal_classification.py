@@ -11,11 +11,11 @@ import numpy as np
 import torch
 from easyai.common.dist_utils import main_process
 from easyai.common.registry import registry
-from easyai.tasks.base_task import BaseTask
+from easyai.tasks.base_task_with_train import BaseTaskWithTrainer
 
 
 @registry.register_task("multimodal_classification")
-class MultimodalClassificationTask(BaseTask):
+class MultimodalClassificationTaskWithTrainer(BaseTaskWithTrainer):
     def __init__(self, max_len, min_len, length_penalty, segments):
         super().__init__()
         self.max_len = max_len

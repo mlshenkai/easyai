@@ -21,7 +21,7 @@ class BaseModel(nn.Module):
     def device(self):
         return next(self.parameters()).device
 
-    def load_checkpoint(self, url_or_filename):
+    def base_load_checkpoint(self, url_or_filename):
         if is_url(url_or_filename):
             cache_file = download_cached_file(url_or_filename)
             checkpoint = torch.load(cache_file, map_location="cpu")
@@ -39,7 +39,7 @@ class BaseModel(nn.Module):
         return msg
 
     @classmethod
-    def from_pretrained(cls, model_type):
+    def base_from_pretrained(cls, model_type):
         """
         Build a pretrained model from default configuration file, specified by model_type.
 
@@ -55,7 +55,7 @@ class BaseModel(nn.Module):
         return model
 
     @classmethod
-    def default_config_path(cls, model_type):
+    def base_default_config_path(cls, model_type):
         assert (
             model_type in cls.PRETRAINED_MODEL_CONFIG_DICT
         ), "Unknown model type {}".format(model_type)
@@ -75,14 +75,14 @@ class BaseModel(nn.Module):
             assert (
                 finetune_path is not None
             ), "Found load_finetuned is True, but finetune_path is None."
-            self.load_checkpoint(url_or_filename=finetune_path)
+            self.base_load_checkpoint(url_or_filename=finetune_path)
         else:
             load_pretrained = cfg.get("load_pretrained", True)
             if load_pretrained:
                 # load pre-trained weights
                 pretrain_path = cfg.get("pretrained", None)
                 assert "Found load_finetuned is False, but pretrain_path is None."
-                self.load_from_pretrained(url_or_filename=pretrain_path, **kwargs)
+                self.base_load_from_pretrained(url_or_filename=pretrain_path, **kwargs)
 
     def before_training(self, **kwargs):
         pass

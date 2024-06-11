@@ -6,7 +6,12 @@
 import os
 import sys
 from omegaconf import OmegaConf
+from easyai.common.registry import registry
+from easyai.common.optims import *
 from easyai.models import *
+from easyai.data.processors import *
+from easyai.data.datasets import *
+from easyai.data.builders import *
 
 
 root_dir = os.path.dirname(os.path.abspath(__file__))

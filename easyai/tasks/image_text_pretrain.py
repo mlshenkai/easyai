@@ -3,11 +3,11 @@
 # @Email: mlshenkai@163.com
 
 from easyai.common.registry import registry
-from easyai.tasks.base_task import BaseTask
+from easyai.tasks.base_task_tf import BaseTask
 
 
 @registry.register_task("image_text_pretrain")
-class ImageTextPretrainTask(BaseTask):
+class ImageTextPretrainTaskWithTrainer(BaseTask):
     def __init__(self):
         super().__init__()
 

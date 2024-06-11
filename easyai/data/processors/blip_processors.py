@@ -10,13 +10,12 @@ from torchvision.transforms import InterpolationMode
 
 from easyai.data.processors.base_processor import BaseProcessor
 from torchvision import transforms
-
+from easyai.common.registry import registry
 from easyai.data.processors.randaugment import RandomAugment
 
 
 class BlipImageBaseProcessor(BaseProcessor):
     def __init__(self, mean=None, std=None):
-        super().__init__()
         if mean is None:
             mean = (0.48145466, 0.4578275, 0.40821073)
         if std is None:
@@ -25,14 +24,15 @@ class BlipImageBaseProcessor(BaseProcessor):
         self.normalize = transforms.Normalize(mean, std)
 
 
+@registry.register_processor("blip_caption")
 class BlipCaptionProcessor(BaseProcessor):
     def __init__(self, prompt="", max_words=50):
-        super().__init__()
         self.prompt = prompt
         self.max_words = max_words
 
     def __call__(self, caption):
         caption = self.prompt + self.pre_caption(caption)
+
         return caption
 
     @classmethod
@@ -42,6 +42,7 @@ class BlipCaptionProcessor(BaseProcessor):
 
         prompt = cfg.get("prompt", "")
         max_words = cfg.get("max_words", 50)
+
         return cls(prompt=prompt, max_words=max_words)
 
     def pre_caption(self, caption):
@@ -66,9 +67,9 @@ class BlipCaptionProcessor(BaseProcessor):
         return caption
 
 
+@registry.register_processor("blip_question")
 class BlipQuestionProcessor(BaseProcessor):
     def __init__(self, max_words=50):
-        super().__init__()
         self.max_words = max_words
 
     def __call__(self, question):
@@ -99,6 +100,7 @@ class BlipQuestionProcessor(BaseProcessor):
         return question
 
 
+@registry.register_processor("blip_image_train")
 class BlipImageTrainProcessor(BlipImageBaseProcessor):
     def __init__(
         self, image_size=384, mean=None, std=None, min_scale=0.5, max_scale=1.0
@@ -160,6 +162,7 @@ class BlipImageTrainProcessor(BlipImageBaseProcessor):
         )
 
 
+@registry.register_processor("blip_image_eval")
 class BlipImageEvalProcessor(BlipImageBaseProcessor):
     def __init__(self, image_size=384, mean=None, std=None):
         super().__init__(mean=mean, std=std)
@@ -190,6 +193,7 @@ class BlipImageEvalProcessor(BlipImageBaseProcessor):
         return cls(image_size=image_size, mean=mean, std=std)
 
 
+@registry.register_processor("blip2_image_train")
 class Blip2ImageTrainProcessor(BlipImageBaseProcessor):
     def __init__(
         self, image_size=364, mean=None, std=None, min_scale=0.5, max_scale=1.0
@@ -219,7 +223,7 @@ class Blip2ImageTrainProcessor(BlipImageBaseProcessor):
 
         image_size = cfg.get("image_size", 364)
 
-        mean = cfg.get("mean", None)  # noqa
+        mean = cfg.get("mean", None)
         std = cfg.get("std", None)
 
         min_scale = cfg.get("min_scale", 0.5)

@@ -8,12 +8,12 @@ import pandas as pd
 from tqdm import tqdm
 from easyai.common.dist_utils import main_process, get_rank
 from easyai.common.registry import registry
-from easyai.tasks.base_task import BaseTask
+from easyai.tasks.base_task_with_train import BaseTaskWithTrainer
 from easyai.common.utils import is_convertible_to_int, is_url, cache_url
 
 
 @registry.register_task("captioning")
-class CaptionTask(BaseTask):
+class CaptionTaskWithTrainer(BaseTaskWithTrainer):
     def __init__(
         self,
         num_beams,

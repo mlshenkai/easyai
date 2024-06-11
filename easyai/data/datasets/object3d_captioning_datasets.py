@@ -9,7 +9,7 @@ from collections import OrderedDict
 import random
 
 from easyai.data.datasets.base_dataset import BaseDataset
-from lavis.common.utils import is_serializable
+from easyai.common.utils import is_serializable
 
 from PIL import Image
 import numpy as np

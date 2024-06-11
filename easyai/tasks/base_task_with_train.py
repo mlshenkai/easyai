@@ -4,6 +4,7 @@
 
 import logging
 import os
+from dataclasses import fields
 
 import torch
 import torch.distributed as dist
@@ -18,7 +19,7 @@ from easyai.common.registry import registry
 from easyai.data.data_utils import prepare_sample
 
 
-class BaseTask:
+class BaseTaskWithTrainer:
     def __init__(self, **kwargs):
         super().__init__()
 
@@ -32,7 +33,7 @@ class BaseTask:
         model_config = cfg.model_cfg
 
         model_cls = registry.get_model_class(model_config.arch)
-        return model_cls.from_config(model_config)
+        return model_cls(**model_config.config)
 
     def build_datasets(self, cfg):
         """
@@ -60,6 +61,16 @@ class BaseTask:
             datasets[name] = dataset
 
         return datasets
+
+    def build_training_args(self, cfg):
+        from transformers import TrainingArguments
+        dataclass_fields = {field.name for field in fields(TrainingArguments)}
+        args_dict = {}
+        for field_key in dataclass_fields:
+            if cfg.run_cfg.get(field_key) is not None:
+                args_dict[field_key] = cfg.run_cfg.get(field_key)
+        return TrainingArguments(**args_dict)
+
 
     def train_step(self, model, samples):
         output = model(samples)

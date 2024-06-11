@@ -2,12 +2,12 @@
 # @Author: watcher
 # @Email: mlshenkai@163.com
 
-from easyai.tasks import BaseTask
+from easyai.tasks import BaseTaskWithTrainer
 from easyai.common.registry import registry
 
 
 @registry.register_task("text-to-image-generation")
-class TextToImageGenerationTask(BaseTask):
+class TextToImageGenerationTaskWithTrainer(BaseTaskWithTrainer):
     def __init__(self, cfg):
         super().__init__()
 

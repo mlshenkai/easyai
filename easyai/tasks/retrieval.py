@@ -10,11 +10,11 @@ import numpy as np
 import torch
 from easyai.common.dist_utils import is_main_process
 from easyai.common.registry import registry
-from easyai.tasks.base_task import BaseTask
+from easyai.tasks.base_task_with_train import BaseTaskWithTrainer
 
 
 @registry.register_task("retrieval")
-class RetrievalTask(BaseTask):
+class RetrievalTaskWithTrainer(BaseTaskWithTrainer):
     def __init__(self, cfg):
         super().__init__()
 

@@ -8,14 +8,14 @@ import os
 from easyai.common.dist_utils import main_process
 from easyai.common.logger import MetricLogger
 from easyai.common.registry import registry
-from easyai.tasks.base_task import BaseTask
+from easyai.tasks.base_task_with_train import BaseTaskWithTrainer
 from easyai.data.data_utils import prepare_sample
 
 import numpy as np
 
 
 @registry.register_task("dialogue")
-class DialogueTask(BaseTask):
+class DialogueTaskWithTrainer(BaseTaskWithTrainer):
     def __init__(self, num_beams, max_len, min_len, evaluate, report_metric=True):
         super().__init__()
 

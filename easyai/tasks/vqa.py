@@ -13,11 +13,11 @@ import easyai.common.dist_utils as dist_utils
 from easyai.common.registry import registry
 from easyai.common.vqa_tools.vqa import VQA
 from easyai.common.vqa_tools.vqa_eval import VQAEval
-from easyai.tasks.base_task import BaseTask
+from easyai.tasks.base_task_with_train import BaseTaskWithTrainer
 
 
 @registry.register_task("vqa")
-class VQATask(BaseTask):
+class VQATaskWithTrainer(BaseTaskWithTrainer):
     def __init__(
         self,
         num_beams,
@@ -286,7 +286,7 @@ def convert_to_coco_gt(
 
 
 @registry.register_task("aok_vqa")
-class AOKVQATask(VQATask):
+class AOKVQATask(VQATaskWithTrainer):
     def valid_step(self, model, samples):
         answers = model.predict_answers(
             samples=samples,
@@ -370,7 +370,7 @@ class AOKVQATask(VQATask):
 
 
 @registry.register_task("gqa")
-class GQATask(VQATask):
+class GQATask(VQATaskWithTrainer):
     def valid_step(self, model, samples):
         answers = model.predict_answers(
             samples=samples,
@@ -398,7 +398,7 @@ class GQATask(VQATask):
         return pred_qa_pairs
 
     def build_datasets(self, cfg):
-        datasets = BaseTask.build_datasets(self, cfg)
+        datasets = BaseTaskWithTrainer.build_datasets(self, cfg)
 
         # get question file, annotation file and anwser list in COCO format
         for ds_name, dataset in datasets.items():
@@ -462,7 +462,7 @@ class GQATask(VQATask):
 
 
 @registry.register_task("discrn_qa")
-class DisCRNTask(VQATask):
+class DisCRNTask(VQATaskWithTrainer):
     def valid_step(self, model, samples):
         answers = model.predict_answers(
             samples=samples,
@@ -494,7 +494,7 @@ class DisCRNTask(VQATask):
         return pred_qa_pairs
 
     def build_datasets(self, cfg):
-        datasets = BaseTask.build_datasets(self, cfg)
+        datasets = BaseTaskWithTrainer.build_datasets(self, cfg)
         return datasets
 
     @dist_utils.main_process

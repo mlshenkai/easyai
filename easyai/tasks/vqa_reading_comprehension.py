@@ -13,11 +13,11 @@ import easyai.common.dist_utils as dist_utils
 from easyai.common.dist_utils import get_rank, get_world_size, is_main_process
 from easyai.common.registry import registry
 from easyai.common.vqa_tools.vqa_eval import VQAEval as VQATool
-from easyai.tasks.vqa import VQATask
+from easyai.tasks.vqa import VQATaskWithTrainer
 
 
 @registry.register_task("vqa_reading_comprehension")
-class VQARCTask(VQATask):
+class VQARCTask(VQATaskWithTrainer):
     def __init__(
         self,
         num_beams,
