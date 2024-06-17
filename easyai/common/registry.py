@@ -64,9 +64,10 @@ class Registry:
 
         def wrap(task_cls):
             from easyai.tasks.base_task_with_train import BaseTaskWithTrainer
+            from easyai.tasks.base_task_tf import BaseTask
 
             assert issubclass(
-                task_cls, BaseTaskWithTrainer
+                task_cls, (BaseTaskWithTrainer, BaseTask)
             ), "All tasks must inherit BaseTask class"
             if name in cls.mapping["task_name_mapping"]:
                 raise KeyError(

@@ -24,7 +24,7 @@ class __DisplMixin:
         )
 
 
-class CaptionDataset(BaseDataset, __DisplMixin):
+class CaptionDataset(BaseDataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
         """
         vis_root (string): Root directory of images (e.g. coco/images/)

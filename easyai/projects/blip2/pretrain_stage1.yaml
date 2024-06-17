@@ -58,7 +58,7 @@ datasets:
 run:
   task: image_text_pretrain
   # optimizer
-  lr_scheduler_type: "linear_warmup_cosine_lr"
+  lr_sched: "linear_warmup_cosine_lr"
   learning_rate: 1e-4
   min_lr: 1e-5
   warmup_lr: 1e-6

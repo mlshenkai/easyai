@@ -4,8 +4,11 @@
 # @File: base_task_tf
 # @Email: mlshenkai@163.com
 from dataclasses import fields
-
+import torch.nn as nn
+import torch
 from easyai.common.registry import registry
+from easyai.models.base_model import BaseModel
+from loguru import logger as logging
 
 
 class BaseTask:
@@ -60,3 +63,47 @@ class BaseTask:
             if cfg.run_cfg.get(field_key) is not None:
                 args_dict[field_key] = cfg.run_cfg.get(field_key)
         return TrainingArguments(**args_dict)
+
+    def build_optimizers(self, model: BaseModel, cfg):
+        lr_scale = cfg.run_cfg.get("lr_layer_decay", 1)
+        weight_decay = cfg.run_cfg.get("weight_decay", 0.05)
+        optim_params = model.get_optimizer_params(weight_decay, lr_scale)
+
+        num_parameters = 0
+        for p_group in optim_params:
+            for p in p_group["params"]:
+                num_parameters += p.data.nelement()
+        logging.info("number of trainable parameters: {}".format(num_parameters))
+
+        beta2 = cfg.run_cfg.get("beta2", 0.999)
+
+        optimizer = torch.optim.AdamW(
+            optim_params,
+            lr=float(cfg.run_cfg.learning_rate),
+            betas=(0.9, beta2),
+        )
+
+        lr_sched_cls = registry.get_lr_scheduler_class(cfg.run_cfg.lr_sched)
+
+        # max_epoch = self.config.run_cfg.max_epoch
+        max_epoch = cfg.run_cfg.num_train_epochs
+        # min_lr = self.config.run_cfg.min_lr
+        min_lr = cfg.run_cfg.min_lr
+        # init_lr = self.config.run_cfg.init_lr
+        init_lr = cfg.run_cfg.learning_rate
+
+        # optional parameters
+        decay_rate = cfg.run_cfg.get("lr_decay_rate", None)
+        warmup_start_lr = cfg.run_cfg.get("warmup_lr", -1)
+        warmup_steps = cfg.run_cfg.get("warmup_steps", 0)
+
+        lr_scheduler = lr_sched_cls(
+            optimizer=optimizer,
+            max_epoch=max_epoch,
+            min_lr=min_lr,
+            init_lr=init_lr,
+            decay_rate=decay_rate,
+            warmup_start_lr=warmup_start_lr,
+            warmup_steps=warmup_steps,
+        )
+        return optimizer, lr_scheduler

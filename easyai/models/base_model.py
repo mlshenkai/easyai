@@ -21,68 +21,68 @@ class BaseModel(nn.Module):
     def device(self):
         return next(self.parameters()).device
 
-    def base_load_checkpoint(self, url_or_filename):
-        if is_url(url_or_filename):
-            cache_file = download_cached_file(url_or_filename)
-            checkpoint = torch.load(cache_file, map_location="cpu")
-        elif os.path.isfile(url_or_filename):
-            checkpoint = torch.load(url_or_filename, map_location="cpu")
-        else:
-            raise FileNotFoundError(f"{url_or_filename}")
-        if "model" in checkpoint.keys():
-            state_dict = checkpoint["model"]
-        else:
-            state_dict = checkpoint
-        msg = self.load_state_dict(state_dict, strict=False)
-        logging.info("Missing keys {}".format(msg.missing_keys))
-        logging.info("load checkpoint from %s" % url_or_filename)
-        return msg
+    # def base_load_checkpoint(self, url_or_filename):
+    #     if is_url(url_or_filename):
+    #         cache_file = download_cached_file(url_or_filename)
+    #         checkpoint = torch.load(cache_file, map_location="cpu")
+    #     elif os.path.isfile(url_or_filename):
+    #         checkpoint = torch.load(url_or_filename, map_location="cpu")
+    #     else:
+    #         raise FileNotFoundError(f"{url_or_filename}")
+    #     if "model" in checkpoint.keys():
+    #         state_dict = checkpoint["model"]
+    #     else:
+    #         state_dict = checkpoint
+    #     msg = self.load_state_dict(state_dict, strict=False)
+    #     logging.info("Missing keys {}".format(msg.missing_keys))
+    #     logging.info("load checkpoint from %s" % url_or_filename)
+    #     return msg
+    #
+    # @classmethod
+    # def base_from_pretrained(cls, model_type):
+    #     """
+    #     Build a pretrained model from default configuration file, specified by model_type.
+    #
+    #     Args:
+    #         - model_type (str): model type, specifying architecture and checkpoints.
+    #
+    #     Returns:
+    #         - model (nn.Module): pretrained or finetuned model, depending on the configuration.
+    #     """
+    #     model_cfg = OmegaConf.load(cls.default_config_path(model_type)).model
+    #     model = cls.from_config(model_cfg)
+    #
+    #     return model
 
-    @classmethod
-    def base_from_pretrained(cls, model_type):
-        """
-        Build a pretrained model from default configuration file, specified by model_type.
-
-        Args:
-            - model_type (str): model type, specifying architecture and checkpoints.
-
-        Returns:
-            - model (nn.Module): pretrained or finetuned model, depending on the configuration.
-        """
-        model_cfg = OmegaConf.load(cls.default_config_path(model_type)).model
-        model = cls.from_config(model_cfg)
-
-        return model
-
-    @classmethod
-    def base_default_config_path(cls, model_type):
-        assert (
-            model_type in cls.PRETRAINED_MODEL_CONFIG_DICT
-        ), "Unknown model type {}".format(model_type)
-        return get_abs_path(cls.PRETRAINED_MODEL_CONFIG_DICT[model_type])
-
-    def load_checkpoint_from_config(self, cfg, **kwargs):
-        """
-        Load checkpoint as specified in the config file.
-
-        If load_finetuned is True, load the finetuned model; otherwise, load the pretrained model.
-        When loading the pretrained model, each task-specific architecture may define their
-        own load_from_pretrained() method.
-        """
-        load_finetuned = cfg.get("load_finetuned", True)
-        if load_finetuned:
-            finetune_path = cfg.get("finetuned", None)
-            assert (
-                finetune_path is not None
-            ), "Found load_finetuned is True, but finetune_path is None."
-            self.base_load_checkpoint(url_or_filename=finetune_path)
-        else:
-            load_pretrained = cfg.get("load_pretrained", True)
-            if load_pretrained:
-                # load pre-trained weights
-                pretrain_path = cfg.get("pretrained", None)
-                assert "Found load_finetuned is False, but pretrain_path is None."
-                self.base_load_from_pretrained(url_or_filename=pretrain_path, **kwargs)
+    # @classmethod
+    # def base_default_config_path(cls, model_type):
+    #     assert (
+    #         model_type in cls.PRETRAINED_MODEL_CONFIG_DICT
+    #     ), "Unknown model type {}".format(model_type)
+    #     return get_abs_path(cls.PRETRAINED_MODEL_CONFIG_DICT[model_type])
+    #
+    # def load_checkpoint_from_config(self, cfg, **kwargs):
+    #     """
+    #     Load checkpoint as specified in the config file.
+    #
+    #     If load_finetuned is True, load the finetuned model; otherwise, load the pretrained model.
+    #     When loading the pretrained model, each task-specific architecture may define their
+    #     own load_from_pretrained() method.
+    #     """
+    #     load_finetuned = cfg.get("load_finetuned", True)
+    #     if load_finetuned:
+    #         finetune_path = cfg.get("finetuned", None)
+    #         assert (
+    #             finetune_path is not None
+    #         ), "Found load_finetuned is True, but finetune_path is None."
+    #         self.base_load_checkpoint(url_or_filename=finetune_path)
+    #     else:
+    #         load_pretrained = cfg.get("load_pretrained", True)
+    #         if load_pretrained:
+    #             # load pre-trained weights
+    #             pretrain_path = cfg.get("pretrained", None)
+    #             assert "Found load_finetuned is False, but pretrain_path is None."
+    #             self.base_load_from_pretrained(url_or_filename=pretrain_path, **kwargs)
 
     def before_training(self, **kwargs):
         pass
