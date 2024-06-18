@@ -6,7 +6,7 @@
 
 from easyai.common.registry import registry
 from easyai.data.builders.base_dataset_builder import MultiModalDatasetBuilder
-from easyai.data.datasets.object3d_captioning_datasets import (
+from easyai.data.datasets.multimodal.object3d_captioning_datasets import (
     ObjaverseCaptionDataset,
     ObjaverseCaptionEvalDataset,
     ObjaverseCaptionInstructDataset,

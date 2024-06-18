@@ -5,7 +5,7 @@
 # @Email: mlshenkai@163.com
 
 from easyai.common.registry import registry
-from easyai.data.datasets.subject_driven_t2i_dataset import (
+from easyai.data.datasets.multimodal.subject_driven_t2i_dataset import (
     SubjectDrivenTextToImageDataset,
 )
 from easyai.data.builders.base_dataset_builder import BaseDatasetBuilder

@@ -7,29 +7,29 @@
 from easyai.data.builders.base_dataset_builder import BaseDatasetBuilder
 
 from easyai.common.registry import registry
-from easyai.data.datasets.aok_vqa_datasets import (
+from easyai.data.datasets.multimodal.aok_vqa_datasets import (
     AOKVQADataset,
     AOKVQAEvalDataset,
     AOKVQAInstructDataset,
 )
-from easyai.data.datasets.coco_vqa_datasets import (
+from easyai.data.datasets.multimodal.coco_vqa_datasets import (
     COCOVQADataset,
     COCOVQAEvalDataset,
     COCOVQAInstructDataset,
 )
-from easyai.data.datasets.vg_vqa_datasets import VGVQADataset, VGVQAInstructDataset
-from easyai.data.datasets.gqa_datasets import (
+from easyai.data.datasets.multimodal.vg_vqa_datasets import VGVQADataset, VGVQAInstructDataset
+from easyai.data.datasets.multimodal.gqa_datasets import (
     GQADataset,
     GQAEvalDataset,
     GQAInstructDataset,
 )
-from easyai.data.datasets.iconqa_datasets import (
+from easyai.data.datasets.multimodal.iconqa_datasets import (
     IconQADataset,
     IconQAEvalDataset,
     IconQAInstructDataset,
 )
-from easyai.data.datasets.ocr_datasets import OCRVQADataset, OCRVQAInstructDataset
-from easyai.data.datasets.vizwiz_vqa_datasets import VizWizEvalDataset
+from easyai.data.datasets.multimodal.ocr_datasets import OCRVQADataset, OCRVQAInstructDataset
+from easyai.data.datasets.multimodal.vizwiz_vqa_datasets import VizWizEvalDataset
 
 
 @registry.register_builder("coco_vqa")

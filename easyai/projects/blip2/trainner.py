@@ -6,12 +6,9 @@
 import argparse
 
 from easyai.data.data_utils import concat_datasets, reorg_datasets_by_split
-from easyai.data.datasets.base_dataset import ConcatDataset
-from easyai.models.blip2.blip2_qformer import Blip2QFormerCLM
-from easyai.models.blip2.configuration_blip2 import Blip2Config
-from transformers import TrainingArguments, DataCollatorForSeq2Seq, Trainer
+from easyai.data.datasets.multimodal.base_dataset import ConcatDataset
 import torch
-from torch.utils.data import DataLoader, IterableDataset
+from torch.utils.data import DataLoader
 import easyai.tasks as tasks
 from easyai.common.config import Config
 from easyai.tasks.base_task_tf import BaseTask

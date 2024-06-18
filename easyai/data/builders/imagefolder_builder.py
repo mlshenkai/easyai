@@ -8,13 +8,13 @@ import os
 
 from easyai.common.registry import registry
 from easyai.data.builders.base_dataset_builder import BaseDatasetBuilder
-from easyai.data.datasets.imagefolder_dataset import ImageFolderDataset
+from easyai.data.datasets.multimodal.imagefolder_dataset import ImageFolderMultiModelDataset
 
 
 @registry.register_builder("imagenet")
 class ImageNetBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ImageFolderDataset
-    eval_dataset_cls = ImageFolderDataset
+    train_dataset_cls = ImageFolderMultiModelDataset
+    eval_dataset_cls = ImageFolderMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/imagenet/defaults.yaml"}
 

@@ -10,11 +10,11 @@ from easyai.data.builders.base_dataset_builder import (
     BaseDatasetBuilder,
     MultiModalDatasetBuilder,
 )
-from easyai.data.datasets.video_vqa_datasets import (
+from easyai.data.datasets.multimodal.video_vqa_datasets import (
     VideoQADataset,
     VideoQAInstructDataset,
 )
-from easyai.data.datasets.music_avqa import MusicAVQAInstructDataset, MusicAVQADataset
+from easyai.data.datasets.multimodal.music_avqa import MusicAVQAInstructDataset, MusicAVQAMultiModelDataset
 
 
 class VideoQABuilder(BaseDatasetBuilder):
@@ -70,8 +70,8 @@ class MSVDQAInstructBuilder(VideoQABuilder):
 
 @registry.register_builder("musicavqa_mm")
 class MusicAVQABuilder(MultiModalDatasetBuilder):
-    train_dataset_cls = MusicAVQADataset
-    eval_dataset_cls = MusicAVQADataset
+    train_dataset_cls = MusicAVQAMultiModelDataset
+    eval_dataset_cls = MusicAVQAMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/music_avqa/defaults_mm_qa.yaml"}
 

@@ -4,20 +4,19 @@
 # @File: __init__.py
 # @Email: mlshenkai@163.com
 
-import os
 from easyai.common.registry import registry
 
 from easyai.data.builders.base_dataset_builder import BaseDatasetBuilder
-from easyai.data.datasets.image_text_pair_datasets import (
-    ImageTextPairDataset,
+from easyai.data.datasets.multimodal.image_text_pair_datasets import (
+    ImageTextPairMultiModelDataset,
     ImageTextPairInstructDataset,
 )
-from easyai.data.datasets.laion_dataset import LaionDataset, LaionInstructDataset
+from easyai.data.datasets.multimodal.laion_dataset import LaionMultiModelDataset, LaionInstructDataset
 
 
 @registry.register_builder("conceptual_caption_3m")
 class ConceptualCaption3MBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ImageTextPairDataset
+    train_dataset_cls = ImageTextPairMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/conceptual_caption/defaults_3m.yaml"
@@ -35,7 +34,7 @@ class ConceptualCaption3MInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("conceptual_caption_12m")
 class ConceptualCaption12MBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ImageTextPairDataset
+    train_dataset_cls = ImageTextPairMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/conceptual_caption/defaults_12m.yaml"
@@ -53,7 +52,7 @@ class ConceptualCaption12MInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("sbu_caption")
 class SBUCaptionBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ImageTextPairDataset
+    train_dataset_cls = ImageTextPairMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/sbu_caption/defaults.yaml"}
 
@@ -69,7 +68,7 @@ class SBUCaptionInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("vg_caption")
 class VGCaptionBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ImageTextPairDataset
+    train_dataset_cls = ImageTextPairMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/vg/defaults_caption.yaml"}
 
@@ -85,7 +84,7 @@ class VGCaptionInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("laion2B_multi")
 class Laion2BMultiBuilder(BaseDatasetBuilder):
-    train_dataset_cls = LaionDataset
+    train_dataset_cls = LaionMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/laion/defaults_2B_multi.yaml"}
 
@@ -117,7 +116,7 @@ class Laion2BMultiBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("laion400M")
 class Laion400MBuilder(Laion2BMultiBuilder):
-    train_dataset_cls = LaionDataset
+    train_dataset_cls = LaionMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/laion/defaults_400M.yaml"}
 

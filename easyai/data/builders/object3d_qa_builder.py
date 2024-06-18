@@ -6,7 +6,7 @@
 
 from easyai.common.registry import registry
 from easyai.data.builders.object3d_caption_builder import ObjaverseCaptionBuilder
-from easyai.data.datasets.object3d_qa_datasets import ObjaverseQADataset
+from easyai.data.datasets.multimodal.object3d_qa_datasets import ObjaverseQADataset
 
 
 @registry.register_builder("objaverse_mm_qa")

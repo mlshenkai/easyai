@@ -6,21 +6,20 @@
 
 from easyai.common.registry import registry
 from easyai.data.builders.base_dataset_builder import (
-    BaseDatasetBuilder,
     MultiModalDatasetBuilder,
 )
 
-from easyai.data.datasets.audio_captioning_datasets import (
+from easyai.data.datasets.multimodal.audio_captioning_datasets import (
     AudioSetDataset,
     AudioSetEvalDataset,
     AudioSetInstructDataset,
     AudioCapsDataset,
     AudioCapsEvalDataset,
     AudioCapsInstructDataset,
-    ClothoV2Dataset,
+    ClothoV2MultiModelDataset,
     ClothoV2InstructDataset,
     ClothoV2EvalDataset,
-    AudioLanguagePretrainDataset,
+    AudioLanguagePretrainMultiModelDataset,
     AudioLanguagePretrainEvalDataset,
     AudioLanguagePretrainInstructDataset,
 )
@@ -89,7 +88,7 @@ class AudioCapsInstructCapBuilder(AudioCapBuilder):
 
 @registry.register_builder("clothov2")
 class ClothoCapInstructBuilder(MultiModalDatasetBuilder):
-    train_dataset_cls = ClothoV2Dataset
+    train_dataset_cls = ClothoV2MultiModelDataset
     eval_dataset_cls = ClothoV2EvalDataset
 
     DATASET_CONFIG_DICT = {
@@ -109,7 +108,7 @@ class ClothoCapInstructBuilder(MultiModalDatasetBuilder):
 
 @registry.register_builder("wavcaps_mm_caption")
 class WavCapsCapBuilder(AudioCapBuilder):
-    train_dataset_cls = AudioLanguagePretrainDataset
+    train_dataset_cls = AudioLanguagePretrainMultiModelDataset
     eval_dataset_cls = AudioLanguagePretrainEvalDataset
 
     DATASET_CONFIG_DICT = {

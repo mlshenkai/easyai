@@ -6,7 +6,7 @@
 
 from easyai.common.registry import registry
 from easyai.data.builders.audio_caption_builder import AudioCapBuilder
-from easyai.data.datasets.audio_qa_datasets import AudioCapsQADataset, ClothoQADataset
+from easyai.data.datasets.multimodal.audio_qa_datasets import AudioCapsQADataset, ClothoQAMultiModelDataset
 
 
 @registry.register_builder("audiocaps_mm_qa")
@@ -21,8 +21,8 @@ class AudioCapsQABuilder(AudioCapBuilder):
 
 @registry.register_builder("clotho_qa")
 class ClothoQABuilder(AudioCapBuilder):
-    train_dataset_cls = ClothoQADataset
-    eval_dataset_cls = ClothoQADataset
+    train_dataset_cls = ClothoQAMultiModelDataset
+    eval_dataset_cls = ClothoQAMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/clotho/defaults_mm_qa.yaml",

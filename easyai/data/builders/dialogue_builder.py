@@ -9,19 +9,19 @@ from easyai.data.builders.base_dataset_builder import (
     BaseDatasetBuilder,
     MultiModalDatasetBuilder,
 )
-from easyai.data.datasets.avsd_dialogue_datasets import (
+from easyai.data.datasets.multimodal.avsd_dialogue_datasets import (
     AVSDDialDataset,
     AVSDDialEvalDataset,
     AVSDDialInstructEvalDataset,
 )
-from easyai.data.datasets.visdial_dialogue_datasets import (
+from easyai.data.datasets.multimodal.visdial_dialogue_datasets import (
     VisDialDataset,
     VisDialInstructDataset,
     VisDialEvalDataset,
 )
 
-from easyai.data.datasets.yt8m_video_dialogue_datasets import YT8MDialDataset
-from easyai.data.datasets.llava150k_dataset import LLaVA150kInstructDataset
+from easyai.data.datasets.multimodal.yt8m_video_dialogue_datasets import YT8MDialMultiModelDataset
+from easyai.data.datasets.multimodal.llava150k_dataset import LLaVA150KInstructMultiModelDataset
 
 
 @registry.register_builder("avsd_dialogue")
@@ -62,15 +62,15 @@ class AVSDDialInstructBuilder(MultiModalDatasetBuilder):
 
 @registry.register_builder("llava150k_dialogue_instruct")
 class LLaVA150kDialInstructBuilder(BaseDatasetBuilder):
-    train_dataset_cls = LLaVA150kInstructDataset
-    eval_dataset_cls = LLaVA150kInstructDataset
+    train_dataset_cls = LLaVA150KInstructMultiModelDataset
+    eval_dataset_cls = LLaVA150KInstructMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/llava150k/defaults_dial.yaml"}
 
 
 @registry.register_builder("yt8m_mm_dialogue")
 class YT8MDialBuilder(MultiModalDatasetBuilder):
-    train_dataset_cls = YT8MDialDataset
-    eval_dataset_cls = YT8MDialDataset
+    train_dataset_cls = YT8MDialMultiModelDataset
+    eval_dataset_cls = YT8MDialMultiModelDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/yt8m/defaults_mm_dial.yaml"}

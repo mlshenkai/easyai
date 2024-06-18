@@ -8,11 +8,11 @@ from easyai.data.builders.base_dataset_builder import (
     BaseDatasetBuilder,
     MultiModalDatasetBuilder,
 )
-from easyai.data.datasets.capfilt_dataset import (
+from easyai.data.datasets.multimodal.capfilt_dataset import (
     CapFiltCaptionInstructDataset,
-    CapFiltCaptionDataset,
+    CapFiltCaptionMultiModelDataset,
 )
-from easyai.data.datasets.coco_caption_datasets import (
+from easyai.data.datasets.multimodal.coco_caption_datasets import (
     COCOCapDataset,
     COCOCapInstructDataset,
     COCOCapEvalDataset,
@@ -20,42 +20,42 @@ from easyai.data.datasets.coco_caption_datasets import (
 )
 
 from easyai.common.registry import registry
-from easyai.data.datasets.video_caption_datasets import (
+from easyai.data.datasets.multimodal.video_caption_datasets import (
     VideoCaptionDataset,
-    VideoCaptionEvalDataset,
-    ClipCaptionDataset,
+    VideoCaptionEvalMultiModelDataset,
+    ClipCaptionMultiModelDataset,
     ClipCaptionInstructDataset,
     ClipCaptionEvalDataset,
     VideoCaptionInstructDataset,
-    WebVideoCaptionDataset,
+    WebVideoCaptionMultiModelDataset,
     WebVideoCaptionInstructDataset,
 )
-from easyai.data.datasets.violin_dataset import (
-    ViolinVideoCaptionDataset,
+from easyai.data.datasets.multimodal.violin_dataset import (
+    ViolinVideoCaptionMultiModelDataset,
     ViolinVideoCaptionInstructDataset,
     ViolinVideoCaptionEvalDataset,
 )
-from easyai.data.datasets.valor_caption import (
+from easyai.data.datasets.multimodal.valor_caption import (
     VALORCaptionInstuctDataset,
     VALORCaptionEvalDataset,
-    VALORCaptionDataset,
+    VALORCaptionMultiModelDataset,
 )
-from easyai.data.datasets.vatex_captioning_datasets import (
+from easyai.data.datasets.multimodal.vatex_captioning_datasets import (
     VATEXCaptionInstuctDataset,
     VATEXCaptionEvalDataset,
-    VATEXCaptionDataset,
+    VATEXCaptionMultiModelDataset,
 )
-from easyai.data.datasets.vlep_dataset import (
-    VlepVideoDataset,
+from easyai.data.datasets.multimodal.vlep_dataset import (
+    VlepVideoMultiModelDataset,
     VlepVideoInstructDataset,
     VlepVideoEvalDataset,
 )
-from easyai.data.datasets.vsr_datasets import (
-    VSRCaptionDataset,
+from easyai.data.datasets.multimodal.vsr_datasets import (
+    VSRCaptionMultiModelDataset,
     VSRCaptionInstructDataset,
     VSRCaptionEvalDataset,
 )
-from easyai.data.datasets.textcaps_datasets import (
+from easyai.data.datasets.multimodal.textcaps_datasets import (
     TextCapsCapDataset,
     TextCapsCapInstructDataset,
     TextCapsCapEvalDataset,
@@ -111,7 +111,7 @@ class COCOCapBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("vsr_caption")
 class VSRCapBuilder(BaseDatasetBuilder):
-    train_dataset_cls = VSRCaptionDataset
+    train_dataset_cls = VSRCaptionMultiModelDataset
     eval_dataset_cls = VSRCaptionEvalDataset
 
     DATASET_CONFIG_DICT = {
@@ -151,7 +151,7 @@ class TextCapsCapInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("capfilt14m")
 class CapFiltCapBuilder(BaseDatasetBuilder):
-    train_dataset_cls = CapFiltCaptionDataset
+    train_dataset_cls = CapFiltCaptionMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/capfilt14m/defaults_cap.yaml",
@@ -170,7 +170,7 @@ class CapFiltCapBuilder(BaseDatasetBuilder):
 @registry.register_builder("msrvtt_caption")
 class MSRVTTCapBuilder(BaseDatasetBuilder):
     train_dataset_cls = VideoCaptionDataset
-    eval_dataset_cls = VideoCaptionEvalDataset
+    eval_dataset_cls = VideoCaptionEvalMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/msrvtt/defaults_cap.yaml",
@@ -180,7 +180,7 @@ class MSRVTTCapBuilder(BaseDatasetBuilder):
 @registry.register_builder("msvd_caption")
 class MSVDCapBuilder(BaseDatasetBuilder):
     train_dataset_cls = VideoCaptionDataset
-    eval_dataset_cls = VideoCaptionEvalDataset
+    eval_dataset_cls = VideoCaptionEvalMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/msvd/defaults_cap.yaml",
@@ -189,7 +189,7 @@ class MSVDCapBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("vatex_caption")
 class VATEXCapBuilder(MultiModalDatasetBuilder):
-    train_dataset_cls = VATEXCaptionDataset
+    train_dataset_cls = VATEXCaptionMultiModelDataset
     eval_dataset_cls = VATEXCaptionEvalDataset
 
     DATASET_CONFIG_DICT = {
@@ -200,7 +200,7 @@ class VATEXCapBuilder(MultiModalDatasetBuilder):
 @registry.register_builder("msrvtt_caption_instruct")
 class MSRVTTCapInstructBuilder(BaseDatasetBuilder):
     train_dataset_cls = VideoCaptionInstructDataset
-    eval_dataset_cls = VideoCaptionEvalDataset
+    eval_dataset_cls = VideoCaptionEvalMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/msrvtt/defaults_cap_instruct.yaml",
@@ -210,7 +210,7 @@ class MSRVTTCapInstructBuilder(BaseDatasetBuilder):
 @registry.register_builder("msvd_caption_instruct")
 class MSVDCapInstructBuilder(BaseDatasetBuilder):
     train_dataset_cls = VideoCaptionInstructDataset
-    eval_dataset_cls = VideoCaptionEvalDataset
+    eval_dataset_cls = VideoCaptionEvalMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/msvd/defaults_cap_instruct.yaml",
@@ -229,7 +229,7 @@ class VATEXCapInstructBuilder(MultiModalDatasetBuilder):
 
 @registry.register_builder("webvid2m_caption")
 class WebVid2MCapBuilder(BaseDatasetBuilder):
-    train_dataset_cls = WebVideoCaptionDataset
+    train_dataset_cls = WebVideoCaptionMultiModelDataset
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/webvid/defaults_cap.yaml",
@@ -247,7 +247,7 @@ class WebVid2MCapInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("violin_caption")
 class ViolinCapBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ViolinVideoCaptionDataset
+    train_dataset_cls = ViolinVideoCaptionMultiModelDataset
     eval_dataset_cls = ViolinVideoCaptionEvalDataset
 
     DATASET_CONFIG_DICT = {
@@ -267,7 +267,7 @@ class ViolinCapInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("valor_mm_caption")
 class VALORCaptionBuilder(MultiModalDatasetBuilder):
-    train_dataset_cls = VALORCaptionDataset
+    train_dataset_cls = VALORCaptionMultiModelDataset
     eval_dataset_cls = VALORCaptionEvalDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/valor/defaults_mm_cap.yaml"}
@@ -285,7 +285,7 @@ class VALORCaptionInstructBuilder(MultiModalDatasetBuilder):
 
 @registry.register_builder("vlep_caption")
 class VlepCaptionBuilder(BaseDatasetBuilder):
-    train_dataset_cls = VlepVideoDataset
+    train_dataset_cls = VlepVideoMultiModelDataset
     eval_dataset_cls = VlepVideoEvalDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/vlep/defaults_cap.yaml"}
@@ -303,7 +303,7 @@ class VlepCaptionInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("youcook_caption")
 class YouCookCaptionBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ClipCaptionDataset
+    train_dataset_cls = ClipCaptionMultiModelDataset
     eval_dataset_cls = ClipCaptionEvalDataset
 
     DATASET_CONFIG_DICT = {
@@ -323,7 +323,7 @@ class YouCookCaptionInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("coin_caption")
 class COINCaptionBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ClipCaptionDataset
+    train_dataset_cls = ClipCaptionMultiModelDataset
     eval_dataset_cls = ClipCaptionEvalDataset
 
     DATASET_CONFIG_DICT = {
@@ -343,7 +343,7 @@ class COINCaptionInstructBuilder(BaseDatasetBuilder):
 
 @registry.register_builder("charade_caption")
 class CharadeCaptionBuilder(BaseDatasetBuilder):
-    train_dataset_cls = ClipCaptionDataset
+    train_dataset_cls = ClipCaptionMultiModelDataset
     eval_dataset_cls = ClipCaptionEvalDataset
 
     DATASET_CONFIG_DICT = {

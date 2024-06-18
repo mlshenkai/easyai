@@ -18,7 +18,7 @@ from easyai.common.dist_utils import (
 from easyai.common.registry import registry
 from easyai.common.utils import is_url
 from easyai.data.data_utils import concat_datasets, reorg_datasets_by_split
-from easyai.data.datasets.dataloader_utils import (
+from easyai.data.datasets.multimodal.dataloader_utils import (
     IterLoader,
     MultiIterLoader,
     PrefetchLoader,

@@ -9,20 +9,20 @@ from easyai.data.builders.base_dataset_builder import (
     BaseDatasetBuilder,
     MultiModalDatasetBuilder,
 )
-from easyai.data.datasets.nlvr_datasets import NLVRDataset, NLVREvalDataset
-from easyai.data.datasets.snli_ve_datasets import (
+from easyai.data.datasets.multimodal.nlvr_datasets import NLVRDataset, NLVREvalDataset
+from easyai.data.datasets.multimodal.snli_ve_datasets import (
     SNLIVisualEntialmentDataset,
     SNLIVisualEntialmentInstructDataset,
 )
-from easyai.data.datasets.violin_dataset import (
+from easyai.data.datasets.multimodal.violin_dataset import (
     ViolinVideoEntailmentDataset,
     ViolinVideoEntailmentInstructDataset,
 )
-from easyai.data.datasets.vsr_datasets import (
+from easyai.data.datasets.multimodal.vsr_datasets import (
     VSRClassificationDataset,
     VSRClassificationInstructDataset,
 )
-from easyai.data.datasets.audio_classification_datasets import ESC50
+from easyai.data.datasets.multimodal.audio_classification_datasets import ESC50
 
 
 @registry.register_builder("violin_entailment")
