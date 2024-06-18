@@ -6,3 +6,5 @@
 from .base_model import BaseModel
 from easyai.models.blip2.blip2_qformer import *
 from easyai.models.blip2.configuration_blip2 import *
+
+from easyai.models.llama3 import *

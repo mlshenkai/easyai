@@ -3,7 +3,7 @@
 # @Created Time: 2024/6/5 下午2:12
 # @File: config
 # @Email: mlshenkai@163.com
-
+import yaml
 from loguru import logger as logging
 import json
 from typing import Dict
@@ -26,7 +26,7 @@ class Config:
         config = OmegaConf.load(self.args.cfg_path)
 
         runner_config = self.build_runner_config(config)
-        model_config = self.build_model_config(config, **user_config)
+        model_config, self.model_config_cls = self.build_model_config(config, **user_config)
         dataset_config = self.build_dataset_config(config)
 
         # Validate the user-provided runner configuration
@@ -38,6 +38,12 @@ class Config:
         self.config = OmegaConf.merge(
             runner_config, model_config, dataset_config, user_config
         )
+
+    @staticmethod
+    def load_yaml(cfg_path):
+        with open(cfg_path, "r") as f:
+            config = yaml.safe_load(f)
+        return config
 
     def _validate_runner_config(self, runner_config):
         """
@@ -56,13 +62,29 @@ class Config:
     def build_model_config(config, **kwargs):
         model = config.get("model", None)
         assert model is not None, "Missing model configuration file."
+
+        model_cls = registry.get_model_class(model.arch)
+        model_config_cls = model_cls.config_class
+        assert model_cls is not None, f"Model '{model.arch}' has not been registered."
+
+        model_type = kwargs.get("model.model_type", None)
+        if not model_type:
+            model_type = model.get("model_type", None)
+        # else use the model type selected by user.
+
+        assert model_type is not None, "Missing model_type."
+
+        model_config_path = model_cls.default_config_path(model_type=model_type)
+
         model_config = OmegaConf.create()
         # hiararchy override, customized config > default config
         model_config = OmegaConf.merge(
             model_config,
+            OmegaConf.load(model_config_path),
             {"model": config["model"]},
         )
-        return model_config
+
+        return model_config, model_config_cls
 
     @staticmethod
     def build_runner_config(config):
@@ -72,9 +94,7 @@ class Config:
     def build_dataset_config(config):
         datasets = config.get("datasets", None)
         if datasets is None:
-            raise KeyError(
-                "Expecting 'datasets' as the root key for dataset configuration."
-            )
+            return OmegaConf.create({"datasets": None})
 
         dataset_config = OmegaConf.create()
 

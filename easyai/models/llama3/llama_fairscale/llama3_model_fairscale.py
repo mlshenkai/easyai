@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Author: watcher
 # @Created Time: 2024/6/13 下午2:32
-# @File: llama3_model
+# @File: llama3_model.yaml
 # @Email: mlshenkai@163.com
 import math
 from typing import Tuple, Optional

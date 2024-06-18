@@ -13,10 +13,13 @@ import numpy as np
 from typing import Optional, Tuple, List, Union
 
 from loguru import logger
+from omegaconf import DictConfig
 from transformers import PreTrainedModel
 from transformers.activations import ACT2FN
 from transformers.modeling_outputs import BaseModelOutputWithPast, CausalLMOutputWithPast, SequenceClassifierOutputWithPast
 from torch.nn import BCEWithLogitsLoss, MSELoss, CrossEntropyLoss
+
+from easyai.models import BaseModel
 from easyai.models.llama3.configuration_llama3 import Llama3Config
 from fairscale.nn.model_parallel.layers import (
     ColumnParallelLinear,
@@ -358,6 +361,9 @@ class Llama3PreTrainedModel(PreTrainedModel):
     config_class = Llama3Config
     base_model_prefix = "model"
     supports_gradient_checkpointing = True
+    PRETRAINED_MODEL_CONFIG_DICT = {
+        "pretrain": "configs/models/llama3/llama3_model.yaml"
+    }
 
     def _init_weights(self, module: nn.Module):
         std = self.config.initializer_range
@@ -370,14 +376,19 @@ class Llama3PreTrainedModel(PreTrainedModel):
             if module.padding_idx is not None:
                 module.weight.data[module.padding_idx].zero_()
 
-    # def _set_gradient_checkpointing(self, module, value=False):
-    #     if isinstance()
-
 
 @registry.register_model("llama3_model")
-class Llama3Model(Llama3PreTrainedModel):
+class Llama3Model(Llama3PreTrainedModel, BaseModel):
+
+    @classmethod
+    def build_model_from_config(cls, config: Llama3Config or dict):
+        if isinstance(config, (dict, DictConfig)):
+            config = config["config"]["config"]
+            config = Llama3Config(**config)
+        return cls.from_pretrained(config.name_or_path, config=config)
+
     def __init__(self, config: Llama3Config or dict):
-        if isinstance(config, dict):
+        if isinstance(config, (dict, DictConfig)):
             config = Llama3Config(**config)
         super().__init__(config)
         self.padding_idx = config.pad_token_id
@@ -597,7 +608,7 @@ class Llama3Model(Llama3PreTrainedModel):
 
 
 @registry.register_model("llama3_model_causal_lm")
-class Llama3ModelForCausalLM(Llama3PreTrainedModel):
+class Llama3ModelForCausalLM(Llama3PreTrainedModel, BaseModel):
     _tied_weights_keys = ["lm_head.weight"]
 
     def __init__(self, config: Union[Llama3Config, dict]):
@@ -738,6 +749,7 @@ class Llama3ModelForCausalLM(Llama3PreTrainedModel):
         return reordered_past
 
 
+@registry.register_model("llama3_cls_model")
 class Llama3ForSequenceClassification(Llama3PreTrainedModel):
     def __init__(self, config: Union[Llama3Config, dict]):
         if isinstance(config, dict):

@@ -11,6 +11,7 @@ from easyai.models.base_model import BaseModel
 from loguru import logger as logging
 
 
+# @registry.register_task("base_task")
 class BaseTask:
     def __init__(self, **kwargs):
         super().__init__()
@@ -24,8 +25,8 @@ class BaseTask:
     def build_model(self, cfg):
         model_config = cfg.model_cfg
 
-        model_cls = registry.get_model_class(model_config.arch)
-        return model_cls(**model_config.config)
+        model_cls: BaseModel = registry.get_model_class(model_config.arch)
+        return model_cls.build_model_from_config(model_config)
 
     def build_datasets(self, cfg):
         """

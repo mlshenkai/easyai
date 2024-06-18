@@ -1029,7 +1029,21 @@ class Blip2QFormerLMHeadModel(Blip2PreTrainedModel):
 
 @registry.register_model("blip2_qformer")
 class Blip2QFormerCLM(Blip2PreTrainedModel, Blip2BaseModel):
+
+
     config_class = Blip2Config
+    PRETRAINED_MODEL_CONFIG_DICT = {
+        "pretrain": "configs/models/blip2/blip2_qformer.yaml"
+    }
+
+    @classmethod
+    def build_model_from_config(cls, config):
+        if isinstance(config, DictConfig):
+            config = config["config"]["config"]
+            tokenizer_pretrained_path = config["config"]["tokenizer_pretrained_path"]
+            vision_pretrain_path = config["config"]["vision_pretrain_path"]
+            config = cls.config_class(**config)
+        pass
 
     def __init__(
         self,
