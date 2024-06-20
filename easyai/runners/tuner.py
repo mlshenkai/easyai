@@ -18,10 +18,10 @@ import torch
 from transformers import PreTrainedModel
 
 from ..data import get_template_and_fix_tokenizer
-from easyai.extras import LogCallback
-from easyai.extras import get_logger
+from easyai.common.callbacks import LogCallback
+from easyai.common.logging import get_logger
 from easyai.configs import get_infer_args, get_train_args
-from ..model import load_model, load_tokenizer
+from ..models import load_model, load_tokenizer
 from .dpo import run_dpo
 from .kto import run_kto
 from .ppo import run_ppo

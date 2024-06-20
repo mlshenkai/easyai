@@ -45,7 +45,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 import torch
 from transformers import Trainer
 
-from easyai.extras import get_logger
+from easyai.common.logging import get_logger
 from ..trainer_utils import create_custom_optimzer, create_custom_scheduler
 
 

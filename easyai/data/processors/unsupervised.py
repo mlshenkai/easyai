@@ -14,7 +14,7 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple
 
-from easyai.extras import get_logger
+from easyai.common.logging import get_logger
 from ..data_utils import Role
 from .processor_utils import get_paligemma_token_type_ids, get_pixel_values
 

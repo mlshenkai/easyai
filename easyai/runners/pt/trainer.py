@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Dict, Optional
 
 from transformers import Trainer
 
-from easyai.extras import get_logger
+from easyai.common.logging import get_logger
 from ..trainer_utils import (
     convert_pissa_adapter,
     create_custom_optimzer,

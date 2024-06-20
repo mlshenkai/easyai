@@ -34,9 +34,9 @@ from trl import PPOConfig, PPOTrainer
 from trl.core import PPODecorators, logprobs_from_logits
 from trl.models.utils import unwrap_model_for_generation
 
-from easyai.extras import FixValueHeadModelCallback, LogCallback
-from easyai.extras import get_logger
-from easyai.extras import (
+from easyai.common.callbacks import FixValueHeadModelCallback, LogCallback
+from easyai.common.logging import get_logger
+from easyai.common.misc import (
     AverageMeter,
     count_parameters,
     get_current_device,

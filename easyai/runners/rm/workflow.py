@@ -39,11 +39,11 @@
 
 from typing import TYPE_CHECKING, List, Optional
 
+from ...common.misc import fix_valuehead_checkpoint
 from ...data import PairwiseDataCollatorWithPadding, get_dataset, split_dataset
-from easyai.extras import FixValueHeadModelCallback
-from easyai.extras import fix_valuehead_checkpoint
+from easyai.common.callbacks import FixValueHeadModelCallback
 from easyai.common.ploting import plot_loss
-from ...model import load_model, load_tokenizer
+from ...models import load_model, load_tokenizer
 from ..trainer_utils import create_modelcard_and_push
 from .metric import compute_accuracy
 from .trainer import PairwiseTrainer

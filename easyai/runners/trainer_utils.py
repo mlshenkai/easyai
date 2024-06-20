@@ -28,10 +28,10 @@ from transformers.pytorch_utils import ALL_LAYERNORM_LAYERS
 from transformers.trainer_pt_utils import get_parameter_names
 
 from easyai.common.constants import IGNORE_INDEX
-from easyai.extras import get_logger
+from easyai.common.logging import get_logger
 from easyai.common.packages import is_galore_available
 from easyai.configs import FinetuningArguments, ModelArguments
-from ..model import (
+from ..modelss import (
     find_all_linear_modules,
     load_model,
     load_tokenizer,
@@ -523,7 +523,7 @@ def _create_badam_optimizer(
 
 def create_custom_optimzer(
     model: "PreTrainedModel",
-    training_args: "Seq2SeqTrainingArguments",
+    training_args: "T",
     finetuning_args: "FinetuningArguments",
 ) -> Optional["torch.optim.Optimizer"]:
     if finetuning_args.use_galore:
