@@ -891,3 +891,4 @@ if __name__ == "__main__":
     # seed must be the same in all processes
     torch.manual_seed(1234)
     Llama3Model.from_pretrained("/code-online/modelscope/llama3-chinese-Instruct")
+from transformers import LlamaTokenizer
