@@ -20,21 +20,25 @@ from typing import TYPE_CHECKING, Literal, Optional, Union
 import numpy as np
 from datasets import load_dataset, load_from_disk
 
-from ..extras.constants import FILEEXT2TYPE
-from ..extras.logging import get_logger
-from ..extras.misc import has_tokenized_data
+
 from .aligner import align_dataset
 from .data_utils import merge_dataset
 from .parser import get_dataset_list
 from .preprocess import get_preprocess_and_print_func
 from .template import get_template_and_fix_tokenizer
-
+from ..common.constants import FILEEXT2TYPE
+from ..common.logging import get_logger
+from ..common.misc import has_tokenized_data
 
 if TYPE_CHECKING:
     from datasets import Dataset, IterableDataset
-    from transformers import PreTrainedTokenizer, ProcessorMixin, Seq2SeqTrainingArguments
+    from transformers import (
+        PreTrainedTokenizer,
+        ProcessorMixin,
+        Seq2SeqTrainingArguments,
+    )
 
-    from ..hparams import DataArguments, ModelArguments
+    from easyai.configs import DataArguments, ModelArguments
     from .parser import DatasetAttr
 
 
@@ -76,9 +80,13 @@ def load_single_dataset(
             raise ValueError("File {} not found.".format(local_path))
 
         if data_path is None:
-            raise ValueError("Allowed file types: {}.".format(",".join(FILEEXT2TYPE.keys())))
+            raise ValueError(
+                "Allowed file types: {}.".format(",".join(FILEEXT2TYPE.keys()))
+            )
     else:
-        raise NotImplementedError("Unknown load type: {}.".format(dataset_attr.load_from))
+        raise NotImplementedError(
+            "Unknown load type: {}.".format(dataset_attr.load_from)
+        )
 
     if dataset_attr.load_from == "ms_hub":
         try:
@@ -94,14 +102,20 @@ def load_single_dataset(
                 split=data_args.split,
                 cache_dir=cache_dir,
                 token=model_args.ms_hub_token,
-                use_streaming=(data_args.streaming and (dataset_attr.load_from != "file")),
+                use_streaming=(
+                    data_args.streaming and (dataset_attr.load_from != "file")
+                ),
             )
             if isinstance(dataset, MsDataset):
                 dataset = dataset.to_hf_dataset()
         except ImportError:
-            raise ImportError("Please install modelscope via `pip install modelscope -U`")
+            raise ImportError(
+                "Please install modelscope via `pip install modelscope -U`"
+            )
     else:
-        if "trust_remote_code" in inspect.signature(load_dataset).parameters:  # for datasets==2.16.0
+        if (
+            "trust_remote_code" in inspect.signature(load_dataset).parameters
+        ):  # for datasets==2.16.0
             kwargs = {"trust_remote_code": True}
         else:
             kwargs = {}
@@ -118,7 +132,9 @@ def load_single_dataset(
             **kwargs,
         )
 
-    if data_args.streaming and (dataset_attr.load_from == "file"):  # faster than specifying streaming=True
+    if data_args.streaming and (
+        dataset_attr.load_from == "file"
+    ):  # faster than specifying streaming=True
         dataset = dataset.to_iterable_dataset()  # TODO: add num shards parameter
 
     if dataset_attr.num_samples is not None and not data_args.streaming:
@@ -131,7 +147,11 @@ def load_single_dataset(
 
         assert len(indexes) == dataset_attr.num_samples, "Sample num mismatched."
         dataset = dataset.select(indexes)
-        logger.info("Sampled {} examples from dataset {}.".format(dataset_attr.num_samples, dataset_attr))
+        logger.info(
+            "Sampled {} examples from dataset {}.".format(
+                dataset_attr.num_samples, dataset_attr
+            )
+        )
 
     if data_args.max_samples is not None:  # truncate dataset
         max_samples = min(data_args.max_samples, len(dataset))
@@ -155,9 +175,13 @@ def get_dataset(
     # Load tokenized dataset
     if data_args.tokenized_path is not None:
         if has_tokenized_data(data_args.tokenized_path):
-            logger.warning("Loading dataset from disk will ignore other data arguments.")
+            logger.warning(
+                "Loading dataset from disk will ignore other data arguments."
+            )
             dataset = load_from_disk(data_args.tokenized_path)
-            logger.info("Loaded tokenized dataset from {}.".format(data_args.tokenized_path))
+            logger.info(
+                "Loaded tokenized dataset from {}.".format(data_args.tokenized_path)
+            )
             if data_args.streaming:
                 dataset = dataset.to_iterable_dataset()
             return dataset
@@ -168,10 +192,16 @@ def get_dataset(
     with training_args.main_process_first(desc="load dataset"):
         all_datasets = []
         for dataset_attr in get_dataset_list(data_args):
-            if (stage == "rm" and dataset_attr.ranking is False) or (stage != "rm" and dataset_attr.ranking is True):
-                raise ValueError("The dataset is not applicable in the current training stage.")
+            if (stage == "rm" and dataset_attr.ranking is False) or (
+                stage != "rm" and dataset_attr.ranking is True
+            ):
+                raise ValueError(
+                    "The dataset is not applicable in the current training stage."
+                )
 
-            all_datasets.append(load_single_dataset(dataset_attr, model_args, data_args, training_args))
+            all_datasets.append(
+                load_single_dataset(dataset_attr, model_args, data_args, training_args)
+            )
 
         dataset = merge_dataset(all_datasets, data_args, training_args)
 
@@ -184,17 +214,26 @@ def get_dataset(
         if not data_args.streaming:
             kwargs = dict(
                 num_proc=data_args.preprocessing_num_workers,
-                load_from_cache_file=(not data_args.overwrite_cache) or (training_args.local_process_index != 0),
+                load_from_cache_file=(not data_args.overwrite_cache)
+                or (training_args.local_process_index != 0),
                 desc="Running tokenizer on dataset",
             )
 
-        dataset = dataset.map(preprocess_func, batched=True, remove_columns=column_names, **kwargs)
+        dataset = dataset.map(
+            preprocess_func, batched=True, remove_columns=column_names, **kwargs
+        )
 
         if data_args.tokenized_path is not None:
             if training_args.should_save:
                 dataset.save_to_disk(data_args.tokenized_path)
-                logger.info("Tokenized dataset saved at {}.".format(data_args.tokenized_path))
-                logger.info("Please restart the training with `tokenized_path: {}`.".format(data_args.tokenized_path))
+                logger.info(
+                    "Tokenized dataset saved at {}.".format(data_args.tokenized_path)
+                )
+                logger.info(
+                    "Please restart the training with `tokenized_path: {}`.".format(
+                        data_args.tokenized_path
+                    )
+                )
 
             sys.exit(0)
 
@@ -203,8 +242,12 @@ def get_dataset(
                 print_function(next(iter(dataset)))
             except StopIteration:
                 if stage == "pt":
-                    raise RuntimeError("Cannot find sufficient samples, consider increasing dataset size.")
+                    raise RuntimeError(
+                        "Cannot find sufficient samples, consider increasing dataset size."
+                    )
                 else:
-                    raise RuntimeError("Cannot find valid samples, check `data/README.md` for the data format.")
+                    raise RuntimeError(
+                        "Cannot find valid samples, check `data/README.md` for the data format."
+                    )
 
         return dataset

@@ -21,6 +21,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 if __name__ == "__main__":
     from easyai.common.config import Config
     from easyai.common.registry import registry
@@ -59,4 +60,3 @@ if __name__ == "__main__":
     model = task.build_model(config)
 
     print(config)
-

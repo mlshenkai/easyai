@@ -61,7 +61,9 @@ def main():
     datasets = [datasets[split] for split in split_names]
     for dataset in datasets:
         if isinstance(dataset, ConcatDataset):
-            data_loader = DataLoader(dataset, batch_size=2, shuffle=False, collate_fn=dataset.collater)
+            data_loader = DataLoader(
+                dataset, batch_size=2, shuffle=False, collate_fn=dataset.collater
+            )
             for data in data_loader:
                 print(data)
     print(model)

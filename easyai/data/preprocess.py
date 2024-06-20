@@ -16,20 +16,30 @@ from functools import partial
 from typing import TYPE_CHECKING, Callable, Literal, Optional, Tuple
 
 from .processors.feedback import preprocess_feedback_dataset
-from .processors.pairwise import preprocess_pairwise_dataset, print_pairwise_dataset_example
+from .processors.pairwise import (
+    preprocess_pairwise_dataset,
+    print_pairwise_dataset_example,
+)
 from .processors.pretrain import preprocess_pretrain_dataset
 from .processors.supervised import (
     preprocess_packed_supervised_dataset,
     preprocess_supervised_dataset,
     print_supervised_dataset_example,
 )
-from .processors.unsupervised import preprocess_unsupervised_dataset, print_unsupervised_dataset_example
+from .processors.unsupervised import (
+    preprocess_unsupervised_dataset,
+    print_unsupervised_dataset_example,
+)
 
 
 if TYPE_CHECKING:
-    from transformers import PreTrainedTokenizer, ProcessorMixin, Seq2SeqTrainingArguments
+    from transformers import (
+        PreTrainedTokenizer,
+        ProcessorMixin,
+        Seq2SeqTrainingArguments,
+    )
 
-    from ..hparams import DataArguments
+    from easyai.configs import DataArguments
     from .template import Template
 
 
@@ -47,7 +57,9 @@ def get_preprocess_and_print_func(
             tokenizer=tokenizer,
             data_args=data_args,
         )
-        print_function = partial(print_unsupervised_dataset_example, tokenizer=tokenizer)
+        print_function = partial(
+            print_unsupervised_dataset_example, tokenizer=tokenizer
+        )
     elif stage == "sft" and not training_args.predict_with_generate:
         if data_args.packing:
             preprocess_func = partial(
@@ -92,6 +104,8 @@ def get_preprocess_and_print_func(
             processor=processor,
             data_args=data_args,
         )
-        print_function = partial(print_unsupervised_dataset_example, tokenizer=tokenizer)
+        print_function = partial(
+            print_unsupervised_dataset_example, tokenizer=tokenizer
+        )
 
     return preprocess_func, print_function

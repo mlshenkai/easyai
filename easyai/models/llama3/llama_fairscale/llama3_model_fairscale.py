@@ -360,6 +360,7 @@ class Llama3ForCausalLM(Llama3PreTrainedModel):
         bsz = input_ids.shape[0]
         min_prompt_len = min(len(t) for t in input_ids)
         max_prompt_len = max(len(t) for t in input_ids)
-        total_length = min(self.config.max_seq_len, max_prompt_len + self.config.max_gen_len)
+        total_length = min(
+            self.config.max_seq_len, max_prompt_len + self.config.max_gen_len
+        )
         pad_id = self.model.tok_embeddings
-

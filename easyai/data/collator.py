@@ -44,7 +44,9 @@ class PairwiseDataCollatorWithPadding(DataCollatorForSeq2Seq):
                     target_feature["pixel_values"] = feature["pixel_values"]
 
                 if "{}_token_type_ids".format(key) in feature:
-                    target_feature["token_type_ids"] = feature["{}_token_type_ids".format(key)]
+                    target_feature["token_type_ids"] = feature[
+                        "{}_token_type_ids".format(key)
+                    ]
 
                 concatenated_features.append(target_feature)
 

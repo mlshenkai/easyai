@@ -14,15 +14,15 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple
 
-from ...extras.constants import IGNORE_INDEX
-from ...extras.logging import get_logger
+from easyai.common.constants import IGNORE_INDEX
+from easyai.extras import get_logger
 from .processor_utils import get_paligemma_token_type_ids, get_pixel_values
 
 
 if TYPE_CHECKING:
     from transformers import PreTrainedTokenizer, ProcessorMixin
 
-    from ...hparams import DataArguments
+    from easyai.configs import DataArguments
     from ..template import Template
 
 
@@ -39,25 +39,41 @@ def _encode_pairwise_example(
     processor: Optional["ProcessorMixin"],
     data_args: "DataArguments",
 ) -> Tuple[List[int], List[int], List[int], List[int]]:
-    if processor is not None and not hasattr(processor, "image_seq_length"):  # llava-like models
+    if processor is not None and not hasattr(
+        processor, "image_seq_length"
+    ):  # llava-like models
         prompt[0]["content"] = template.image_token + prompt[0]["content"]
 
     chosen_messages = prompt + [response[0]]
     rejected_messages = prompt + [response[1]]
     prompt_ids, chosen_ids = template.encode_oneturn(
-        tokenizer, chosen_messages, system, tools, data_args.cutoff_len, data_args.reserved_label_len
+        tokenizer,
+        chosen_messages,
+        system,
+        tools,
+        data_args.cutoff_len,
+        data_args.reserved_label_len,
     )
     _, rejected_ids = template.encode_oneturn(
-        tokenizer, rejected_messages, system, tools, data_args.cutoff_len, data_args.reserved_label_len
+        tokenizer,
+        rejected_messages,
+        system,
+        tools,
+        data_args.cutoff_len,
+        data_args.reserved_label_len,
     )
 
     if template.efficient_eos:
         chosen_ids += [tokenizer.eos_token_id]
         rejected_ids += [tokenizer.eos_token_id]
 
-    if processor is not None and hasattr(processor, "image_seq_length"):  # paligemma models
+    if processor is not None and hasattr(
+        processor, "image_seq_length"
+    ):  # paligemma models
         image_token_id = tokenizer.convert_tokens_to_ids(template.image_token)
-        prompt_ids = [image_token_id] * getattr(processor, "image_seq_length") + prompt_ids
+        prompt_ids = [image_token_id] * getattr(
+            processor, "image_seq_length"
+        ) + prompt_ids
 
     chosen_input_ids = prompt_ids + chosen_ids
     chosen_labels = [IGNORE_INDEX] * len(prompt_ids) + chosen_ids
@@ -91,10 +107,19 @@ def preprocess_pairwise_dataset(
 
     for i in range(len(examples["prompt"])):
         if len(examples["prompt"][i]) % 2 != 1 or len(examples["response"][i]) < 2:
-            logger.warning("Dropped invalid example: {}".format(examples["prompt"][i] + examples["response"][i]))
+            logger.warning(
+                "Dropped invalid example: {}".format(
+                    examples["prompt"][i] + examples["response"][i]
+                )
+            )
             continue
 
-        chosen_input_ids, chosen_labels, rejected_input_ids, rejected_labels = _encode_pairwise_example(
+        (
+            chosen_input_ids,
+            chosen_labels,
+            rejected_input_ids,
+            rejected_labels,
+        ) = _encode_pairwise_example(
             prompt=examples["prompt"][i],
             response=examples["response"][i],
             system=examples["system"][i],
@@ -111,7 +136,9 @@ def preprocess_pairwise_dataset(
         model_inputs["rejected_attention_mask"].append([1] * len(rejected_input_ids))
         model_inputs["rejected_labels"].append(rejected_labels)
         if processor is not None:
-            model_inputs["pixel_values"].append(get_pixel_values(examples["images"][i], processor))
+            model_inputs["pixel_values"].append(
+                get_pixel_values(examples["images"][i], processor)
+            )
             if hasattr(processor, "image_seq_length"):  # paligemma models
                 model_inputs["chosen_token_type_ids"].append(
                     get_paligemma_token_type_ids(len(chosen_input_ids), processor)
@@ -123,14 +150,36 @@ def preprocess_pairwise_dataset(
     return model_inputs
 
 
-def print_pairwise_dataset_example(example: Dict[str, List[int]], tokenizer: "PreTrainedTokenizer") -> None:
-    valid_chosen_labels = list(filter(lambda x: x != IGNORE_INDEX, example["chosen_labels"]))
-    valid_rejected_labels = list(filter(lambda x: x != IGNORE_INDEX, example["rejected_labels"]))
+def print_pairwise_dataset_example(
+    example: Dict[str, List[int]], tokenizer: "PreTrainedTokenizer"
+) -> None:
+    valid_chosen_labels = list(
+        filter(lambda x: x != IGNORE_INDEX, example["chosen_labels"])
+    )
+    valid_rejected_labels = list(
+        filter(lambda x: x != IGNORE_INDEX, example["rejected_labels"])
+    )
     print("chosen_input_ids:\n{}".format(example["chosen_input_ids"]))
-    print("chosen_inputs:\n{}".format(tokenizer.decode(example["chosen_input_ids"], skip_special_tokens=False)))
+    print(
+        "chosen_inputs:\n{}".format(
+            tokenizer.decode(example["chosen_input_ids"], skip_special_tokens=False)
+        )
+    )
     print("chosen_label_ids:\n{}".format(example["chosen_labels"]))
-    print("chosen_labels:\n{}".format(tokenizer.decode(valid_chosen_labels, skip_special_tokens=False)))
+    print(
+        "chosen_labels:\n{}".format(
+            tokenizer.decode(valid_chosen_labels, skip_special_tokens=False)
+        )
+    )
     print("rejected_input_ids:\n{}".format(example["rejected_input_ids"]))
-    print("rejected_inputs:\n{}".format(tokenizer.decode(example["rejected_input_ids"], skip_special_tokens=False)))
+    print(
+        "rejected_inputs:\n{}".format(
+            tokenizer.decode(example["rejected_input_ids"], skip_special_tokens=False)
+        )
+    )
     print("rejected_label_ids:\n{}".format(example["rejected_labels"]))
-    print("rejected_labels:\n{}".format(tokenizer.decode(valid_rejected_labels, skip_special_tokens=False)))
+    print(
+        "rejected_labels:\n{}".format(
+            tokenizer.decode(valid_rejected_labels, skip_special_tokens=False)
+        )
+    )

@@ -15,7 +15,7 @@
 import bisect
 from typing import TYPE_CHECKING, List, Sequence
 
-from ...extras.packages import is_pillow_available
+from easyai.common.packages import is_pillow_available
 
 
 if is_pillow_available():
@@ -61,16 +61,24 @@ def greedy_knapsack(numbers: List[int], capacity: int) -> List[List[int]]:
     return knapsacks
 
 
-def get_pixel_values(images: Sequence["ImageObject"], processor: "ProcessorMixin") -> "NDArray":
+def get_pixel_values(
+    images: Sequence["ImageObject"], processor: "ProcessorMixin"
+) -> "NDArray":
     r"""
     Processes visual inputs. (currently only supports a single image)
     """
     image_processor: "BaseImageProcessor" = getattr(processor, "image_processor")
-    image = images[0] if len(images) != 0 else Image.new("RGB", (100, 100), (255, 255, 255))
-    return image_processor(image, return_tensors="pt")["pixel_values"][0]  # shape (C, H, W)
+    image = (
+        images[0] if len(images) != 0 else Image.new("RGB", (100, 100), (255, 255, 255))
+    )
+    return image_processor(image, return_tensors="pt")["pixel_values"][
+        0
+    ]  # shape (C, H, W)
 
 
-def get_paligemma_token_type_ids(input_len: int, processor: "ProcessorMixin") -> List[int]:
+def get_paligemma_token_type_ids(
+    input_len: int, processor: "ProcessorMixin"
+) -> List[int]:
     r"""
     Gets paligemma token type ids for computing loss.
     """

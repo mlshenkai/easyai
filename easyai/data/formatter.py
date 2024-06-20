@@ -45,10 +45,18 @@ def default_tool_formatter(tools: List[Dict[str, Any]]) -> str:
     for tool in tools:
         param_text = ""
         for name, param in tool["parameters"]["properties"].items():
-            required = ", required" if name in tool["parameters"].get("required", []) else ""
-            enum = ", should be one of [{}]".format(", ".join(param["enum"])) if param.get("enum", None) else ""
+            required = (
+                ", required" if name in tool["parameters"].get("required", []) else ""
+            )
+            enum = (
+                ", should be one of [{}]".format(", ".join(param["enum"]))
+                if param.get("enum", None)
+                else ""
+            )
             items = (
-                ", where each item should be {}".format(param["items"].get("type", "")) if param.get("items") else ""
+                ", where each item should be {}".format(param["items"].get("type", ""))
+                if param.get("items")
+                else ""
             )
             param_text += "  - {name} ({type}{required}): {desc}{enum}{items}\n".format(
                 name=name,
@@ -64,11 +72,16 @@ def default_tool_formatter(tools: List[Dict[str, Any]]) -> str:
         )
         tool_names.append(tool["name"])
 
-    return DEFAULT_TOOL_PROMPT.format(tool_text=tool_text, tool_names=", ".join(tool_names))
+    return DEFAULT_TOOL_PROMPT.format(
+        tool_text=tool_text, tool_names=", ".join(tool_names)
+    )
 
 
 def default_tool_extractor(content: str) -> Union[str, List[Tuple[str, str]]]:
-    regex = re.compile(r"Action:\s*([a-zA-Z0-9_]+)\s*Action Input:\s*(.+?)(?=\s*Action:|\s*$)", re.DOTALL)
+    regex = re.compile(
+        r"Action:\s*([a-zA-Z0-9_]+)\s*Action Input:\s*(.+?)(?=\s*Action:|\s*$)",
+        re.DOTALL,
+    )
     action_match: List[Tuple[str, str]] = re.findall(regex, content)
     if not action_match:
         return content
@@ -115,7 +128,8 @@ class Formatter(ABC):
     tool_format: Optional[Literal["default", "glm4"]] = None
 
     @abstractmethod
-    def apply(self, **kwargs) -> SLOTS: ...
+    def apply(self, **kwargs) -> SLOTS:
+        ...
 
     def extract(self, content: str) -> Union[str, List[Tuple[str, str]]]:
         raise NotImplementedError
@@ -160,7 +174,11 @@ class StringFormatter(Formatter):
             elif isinstance(slot, (dict, set)):
                 elements.append(slot)
             else:
-                raise RuntimeError("Input must be string, set[str] or dict[str, str], got {}".format(type(slot)))
+                raise RuntimeError(
+                    "Input must be string, set[str] or dict[str, str], got {}".format(
+                        type(slot)
+                    )
+                )
 
         return elements
 
@@ -176,7 +194,9 @@ class FunctionFormatter(Formatter):
                 has_args = True
 
         if not has_name or not has_args:
-            raise ValueError("Name and arguments placeholders are required in the function formatter.")
+            raise ValueError(
+                "Name and arguments placeholders are required in the function formatter."
+            )
 
     def apply(self, **kwargs) -> SLOTS:
         content = kwargs.pop("content")
@@ -187,7 +207,12 @@ class FunctionFormatter(Formatter):
                 tool_calls = [tool_calls]
 
             for tool_call in tool_calls:
-                functions.append((tool_call["name"], json.dumps(tool_call["arguments"], ensure_ascii=False)))
+                functions.append(
+                    (
+                        tool_call["name"],
+                        json.dumps(tool_call["arguments"], ensure_ascii=False),
+                    )
+                )
 
         except json.JSONDecodeError:
             functions = []
@@ -196,12 +221,18 @@ class FunctionFormatter(Formatter):
         for name, arguments in functions:
             for slot in self.slots:
                 if isinstance(slot, str):
-                    slot = slot.replace("{{name}}", name).replace("{{arguments}}", arguments)
+                    slot = slot.replace("{{name}}", name).replace(
+                        "{{arguments}}", arguments
+                    )
                     elements.append(slot)
                 elif isinstance(slot, (dict, set)):
                     elements.append(slot)
                 else:
-                    raise RuntimeError("Input must be string, set[str] or dict[str, str], got {}".format(type(slot)))
+                    raise RuntimeError(
+                        "Input must be string, set[str] or dict[str, str], got {}".format(
+                            type(slot)
+                        )
+                    )
 
         return elements
 

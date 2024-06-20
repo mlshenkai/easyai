@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from transformers import PretrainedConfig
 from typing import Optional
 
+
 @dataclass
 class Llama3ModelConfig(PretrainedConfig):
     dim: int = 4096
@@ -22,5 +23,3 @@ class Llama3ModelConfig(PretrainedConfig):
     max_batch_size: int = 32
     max_seq_len: int = 2048
     max_gen_len: int = 8016
-
-

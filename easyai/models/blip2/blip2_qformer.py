@@ -1029,8 +1029,6 @@ class Blip2QFormerLMHeadModel(Blip2PreTrainedModel):
 
 @registry.register_model("blip2_qformer")
 class Blip2QFormerCLM(Blip2PreTrainedModel, Blip2BaseModel):
-
-
     config_class = Blip2Config
     PRETRAINED_MODEL_CONFIG_DICT = {
         "pretrain": "configs/models/blip2/blip2_qformer.yaml"

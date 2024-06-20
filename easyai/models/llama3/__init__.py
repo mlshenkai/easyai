@@ -4,5 +4,9 @@
 # @File: __init__.py
 # @Email: mlshenkai@163.com
 
-from .modeling_llama3 import Llama3Model, Llama3ModelForCausalLM, Llama3ForSequenceClassification
+from .modeling_llama3 import (
+    Llama3Model,
+    Llama3ModelForCausalLM,
+    Llama3ForSequenceClassification,
+)
 from .configuration_llama3 import Llama3Config

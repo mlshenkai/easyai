@@ -10,7 +10,6 @@ from transformers import LlamaConfig
 
 @registry.register_model_config("llama3_model_config")
 class Llama3Config(LlamaConfig):
-
     def __init__(
         self,
         vocab_size=32000,
