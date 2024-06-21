@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Dict, List, Literal, Optional
 import torch
 from transformers.integrations import is_deepspeed_zero3_enabled
 
-from easyai.common.packages import is_requests_available
+from easyai.common import is_requests_available
 
 
 if is_requests_available():
@@ -27,8 +27,7 @@ if is_requests_available():
 
 
 if TYPE_CHECKING:
-    from transformers import PreTrainedModel
-    from trl import AutoModelForCausalLMWithValueHead
+    pass
 
 
 def get_rewards_from_server(server_url: str, messages: List[str]) -> List[torch.Tensor]:

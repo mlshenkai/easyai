@@ -29,9 +29,9 @@ from transformers.training_args import ParallelMode
 from transformers.utils import is_torch_bf16_gpu_available
 from transformers.utils.versions import require_version
 
-from easyai.common.constants import CHECKPOINT_NAMES
+from easyai.common import CHECKPOINT_NAMES
 from easyai.common.logging import get_logger
-from easyai.common.misc import check_dependencies, get_current_device
+from easyai.common import check_dependencies, get_current_device
 from .data_args import DataArguments
 from .evaluation_args import EvaluationArguments
 from .finetuning_args import FinetuningArguments

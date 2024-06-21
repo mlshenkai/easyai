@@ -10,7 +10,7 @@ from easyai.data.datasets.multimodal.base_dataset import ConcatDataset
 import torch
 from torch.utils.data import DataLoader
 import easyai.tasks as tasks
-from easyai.common.config import Config
+from easyai.common import Config
 from easyai.tasks.base_task_tf import BaseTask
 
 

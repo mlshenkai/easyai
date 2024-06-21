@@ -34,9 +34,9 @@ from trl import PPOConfig, PPOTrainer
 from trl.core import PPODecorators, logprobs_from_logits
 from trl.models.utils import unwrap_model_for_generation
 
-from easyai.common.callbacks import FixValueHeadModelCallback, LogCallback
+from easyai.common import FixValueHeadModelCallback, LogCallback
 from easyai.common.logging import get_logger
-from easyai.common.misc import (
+from easyai.common import (
     AverageMeter,
     count_parameters,
     get_current_device,
@@ -52,18 +52,7 @@ from .ppo_utils import (
 
 
 if TYPE_CHECKING:
-    from datasets import Dataset
-    from transformers import (
-        DataCollatorWithPadding,
-        PreTrainedTokenizer,
-        ProcessorMixin,
-        Seq2SeqTrainingArguments,
-        TrainerCallback,
-    )
-    from trl import AutoModelForCausalLMWithValueHead
-
-    from easyai.configs import FinetuningArguments, GeneratingArguments, ModelArguments
-
+    pass
 
 logger = get_logger(__name__)
 

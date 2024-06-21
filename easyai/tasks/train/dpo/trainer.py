@@ -28,7 +28,7 @@ from transformers import Trainer
 from trl import DPOTrainer
 from trl.trainer import disable_dropout_in_model
 
-from easyai.common.constants import IGNORE_INDEX
+from easyai.common import IGNORE_INDEX
 from ..trainer_utils import (
     convert_pissa_adapter,
     create_custom_optimzer,
@@ -38,9 +38,7 @@ from ..trainer_utils import (
 
 
 if TYPE_CHECKING:
-    from transformers import PreTrainedModel, ProcessorMixin
-
-    from easyai.configs import FinetuningArguments
+    pass
 
 
 class CustomDPOTrainer(DPOTrainer):

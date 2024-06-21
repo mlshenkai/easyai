@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING, Dict
 import torch
 from transformers.utils import cached_file
 
-from easyai.common.constants import V_HEAD_SAFE_WEIGHTS_NAME, V_HEAD_WEIGHTS_NAME
+from easyai.common import V_HEAD_SAFE_WEIGHTS_NAME, V_HEAD_WEIGHTS_NAME
 from easyai.common.logging import get_logger
 
 

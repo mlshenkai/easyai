@@ -23,14 +23,12 @@ from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
 
 import torch
 
-from easyai.common.constants import LAYERNORM_NAMES
+from easyai.common import LAYERNORM_NAMES
 from easyai.common.logging import get_logger
 
 
 if TYPE_CHECKING:
-    from transformers import PreTrainedModel
-
-    from easyai.configs import ModelArguments
+    pass
 
 
 logger = get_logger(__name__)

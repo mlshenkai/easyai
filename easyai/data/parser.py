@@ -21,7 +21,7 @@ from easyai.common.constants import DATA_CONFIG
 from easyai.common.misc import use_modelscope
 
 if TYPE_CHECKING:
-    from easyai.configs import DataArguments
+    pass
 
 
 @dataclass

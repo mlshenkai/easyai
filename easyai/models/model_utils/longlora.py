@@ -23,7 +23,6 @@ from typing import TYPE_CHECKING, Optional, Tuple
 import torch
 import torch.nn as nn
 from transformers.models.llama.modeling_llama import (
-    Cache,
     LlamaAttention,
     LlamaFlashAttention2,
     LlamaSdpaAttention,
@@ -33,14 +32,12 @@ from transformers.models.llama.modeling_llama import (
 from transformers.utils import logging
 from transformers.utils.versions import require_version
 
-from easyai.common.constants import SUPPORTED_CLASS_FOR_S2ATTN
+from easyai.common import SUPPORTED_CLASS_FOR_S2ATTN
 from easyai.common.logging import get_logger
 
 
 if TYPE_CHECKING:
-    from transformers import PretrainedConfig
-
-    from easyai.configs import ModelArguments
+    pass
 
 
 logger = logging.get_logger(__name__)

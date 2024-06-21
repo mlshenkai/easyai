@@ -9,7 +9,6 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import torch.utils.checkpoint
-import numpy as np
 from typing import Optional, Tuple, List, Union
 
 from loguru import logger
@@ -31,7 +30,7 @@ from fairscale.nn.model_parallel.layers import (
     VocabParallelEmbedding,
 )
 import fairscale.nn.model_parallel.initialize as fs_init
-from easyai.common.registry import registry
+from easyai.common import registry
 
 
 # copied by transformers.models.bart.modeling_bart._make_causal_mask
@@ -899,7 +898,6 @@ class Llama3ForSequenceClassification(Llama3PreTrainedModel):
 if __name__ == "__main__":
     import torch.distributed
     import os
-    from transformers import LlamaModel
 
     os.environ["MASTER_ADDR"] = "localhost"
     os.environ["MASTER_PORT"] = "29500"
@@ -925,4 +923,3 @@ if __name__ == "__main__":
     # seed must be the same in all processes
     torch.manual_seed(1234)
     Llama3Model.from_pretrained("/code-online/modelscope/llama3-chinese-Instruct")
-from transformers import LlamaTokenizer

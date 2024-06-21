@@ -15,7 +15,7 @@
 import bisect
 from typing import TYPE_CHECKING, List, Sequence
 
-from easyai.common.packages import is_pillow_available
+from easyai.common import is_pillow_available
 
 
 if is_pillow_available():
@@ -23,10 +23,7 @@ if is_pillow_available():
 
 
 if TYPE_CHECKING:
-    from numpy.typing import NDArray
-    from PIL.Image import Image as ImageObject
-    from transformers import ProcessorMixin
-    from transformers.image_processing_utils import BaseImageProcessor
+    pass
 
 
 def search_for_fit(numbers: Sequence[int], capacity: int) -> int:

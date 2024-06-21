@@ -21,10 +21,7 @@ from easyai.common.logging import get_logger
 
 
 if TYPE_CHECKING:
-    from datasets import Dataset, IterableDataset
-    from transformers import Seq2SeqTrainingArguments
-
-    from easyai.configs import DataArguments
+    pass
 
 
 logger = get_logger(__name__)

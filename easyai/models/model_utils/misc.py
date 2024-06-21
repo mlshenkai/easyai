@@ -18,7 +18,7 @@ from easyai.common.logging import get_logger
 
 
 if TYPE_CHECKING:
-    from transformers import PretrainedConfig, PreTrainedModel, PreTrainedTokenizer
+    pass
 
 
 logger = get_logger(__name__)

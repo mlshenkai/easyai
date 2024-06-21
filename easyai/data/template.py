@@ -21,10 +21,7 @@ from .formatter import EmptyFormatter, FunctionFormatter, StringFormatter, ToolF
 
 
 if TYPE_CHECKING:
-    from transformers import PreTrainedTokenizer
-
-    from .formatter import SLOTS, Formatter
-
+    pass
 
 logger = get_logger(__name__)
 

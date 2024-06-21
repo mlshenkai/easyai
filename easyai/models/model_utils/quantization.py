@@ -28,15 +28,13 @@ from transformers.integrations import is_deepspeed_zero3_enabled
 from transformers.modeling_utils import is_fsdp_enabled
 from transformers.utils.versions import require_version
 
-from easyai.common.constants import FILEEXT2TYPE
+from easyai.common import FILEEXT2TYPE
 from easyai.common.logging import get_logger
-from easyai.common.misc import get_current_device
+from easyai.common import get_current_device
 
 
 if TYPE_CHECKING:
-    from transformers import PretrainedConfig, PreTrainedTokenizer
-
-    from easyai.configs import ModelArguments
+    pass
 
 
 logger = get_logger(__name__)

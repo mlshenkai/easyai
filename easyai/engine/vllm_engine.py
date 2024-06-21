@@ -17,15 +17,15 @@ from typing import TYPE_CHECKING, AsyncGenerator, AsyncIterator, Dict, List, Opt
 
 from ..data import get_template_and_fix_tokenizer
 from easyai.common.logging import get_logger
-from easyai.common.misc import get_device_count
-from easyai.common.packages import is_vllm_available, is_vllm_version_greater_than_0_5
-from ..models import load_config, load_tokenizer
-from ..models.model_utils.visual import LlavaMultiModalProjectorForYiVLForVLLM
+from easyai.common import get_device_count
+from easyai.common import is_vllm_available, is_vllm_version_greater_than_0_5
+from easyai.models import load_config, load_tokenizer
+from easyai.models.model_utils.visual import LlavaMultiModalProjectorForYiVLForVLLM
 from .base_engine import BaseEngine, Response
 
 
 if is_vllm_available():
-    from vllm import AsyncEngineArgs, AsyncLLMEngine, RequestOutput, SamplingParams
+    from vllm import AsyncEngineArgs, AsyncLLMEngine, SamplingParams
     from vllm.lora.request import LoRARequest
 
     if is_vllm_version_greater_than_0_5():
@@ -35,10 +35,7 @@ if is_vllm_available():
 
 
 if TYPE_CHECKING:
-    from numpy.typing import NDArray
-    from transformers.image_processing_utils import BaseImageProcessor
-
-    from ..configs import DataArguments, FinetuningArguments, GeneratingArguments, ModelArguments
+    pass
 
 
 logger = get_logger(__name__)

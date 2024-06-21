@@ -3,7 +3,7 @@
 # @Created Time: 2024/6/6 上午10:28
 # @File: blip2_qformer_config
 # @Email: mlshenkai@163.com
-from easyai.common.config import Config
+from easyai.common import Config
 from omegaconf import OmegaConf
 
 args = OmegaConf.create(

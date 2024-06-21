@@ -24,7 +24,7 @@ import numpy as np
 import torch
 from transformers import Seq2SeqTrainer
 
-from easyai.common.constants import IGNORE_INDEX
+from easyai.common import IGNORE_INDEX
 from easyai.common.logging import get_logger
 from ..trainer_utils import (
     convert_pissa_adapter,
@@ -34,11 +34,7 @@ from ..trainer_utils import (
 
 
 if TYPE_CHECKING:
-    from torch.utils.data import Dataset
-    from transformers import ProcessorMixin
-    from transformers.trainer import PredictionOutput
-
-    from easyai.configs import FinetuningArguments
+    pass
 
 
 logger = get_logger(__name__)

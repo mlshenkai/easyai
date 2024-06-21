@@ -16,8 +16,8 @@ import json
 import os
 from typing import TYPE_CHECKING, Any, Dict, List, Tuple
 
-from ...extras.constants import DATA_CONFIG
-from ...extras.packages import is_gradio_available
+from easyai.common.constants import DATA_CONFIG
+from easyai.common.packages import is_gradio_available
 
 
 if is_gradio_available():

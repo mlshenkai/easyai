@@ -25,9 +25,7 @@ from easyai.common.logging import get_logger
 
 
 if TYPE_CHECKING:
-    from transformers import LlavaConfig, PretrainedConfig, PreTrainedModel
-
-    from easyai.configs import ModelArguments
+    pass
 
 
 logger = get_logger(__name__)

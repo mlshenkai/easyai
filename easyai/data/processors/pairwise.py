@@ -14,7 +14,7 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple
 
-from easyai.common.constants import IGNORE_INDEX
+from easyai.common import IGNORE_INDEX
 from easyai.common.logging import get_logger
 from .processor_utils import get_paligemma_token_type_ids, get_pixel_values
 

@@ -4,13 +4,9 @@
 # @File: base_model
 # @Email: mlshenkai@163.com
 import torch.nn as nn
-import os
-import torch
-from loguru import logger as logging
-from omegaconf import OmegaConf, DictConfig
-from abc import ABC, abstractmethod
-from easyai.common.utils import is_url, get_abs_path
-from easyai.common.dist_utils import download_cached_file
+from omegaconf import DictConfig
+from abc import ABC
+from easyai.common import get_abs_path
 
 
 class BaseModel(nn.Module, ABC):

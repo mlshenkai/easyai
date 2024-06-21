@@ -14,7 +14,7 @@
 
 from typing import TYPE_CHECKING, Dict
 
-from ...extras.packages import is_gradio_available
+from easyai.common.packages import is_gradio_available
 from .chatbot import create_chat_box
 
 

@@ -27,7 +27,7 @@ from transformers.integrations import is_deepspeed_zero3_enabled
 from transformers.modeling_utils import is_fsdp_enabled
 
 from easyai.common.logging import get_logger
-from easyai.common.misc import infer_optim_dtype
+from easyai.common import infer_optim_dtype
 from .model_utils.attention import (
     configure_attn_implementation,
     print_attn_implementation,
@@ -43,10 +43,7 @@ from .model_utils.visual import autocast_projector_dtype, configure_visual_model
 
 
 if TYPE_CHECKING:
-    from transformers import PretrainedConfig, PreTrainedTokenizer
-    from trl import AutoModelForCausalLMWithValueHead
-
-    from easyai.configs import ModelArguments
+    pass
 
 
 logger = get_logger(__name__)

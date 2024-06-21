@@ -23,8 +23,8 @@ def parse_args():
 
 
 if __name__ == "__main__":
-    from easyai.common.config import Config
-    from easyai.common.registry import registry
+    from easyai.common import Config
+    from easyai.common import registry
     from transformers import AutoModel
     import torch.distributed
     import os

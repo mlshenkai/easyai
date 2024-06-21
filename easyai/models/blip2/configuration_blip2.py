@@ -9,7 +9,7 @@ from typing import Union
 from loguru import logger
 from transformers import PretrainedConfig, CONFIG_MAPPING
 from transformers.models.auto.modeling_auto import MODEL_FOR_CAUSAL_LM_MAPPING_NAMES
-from easyai.common.registry import registry
+from easyai.common import registry
 
 
 @registry.register_model_config("blip2_vision_config")

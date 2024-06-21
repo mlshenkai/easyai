@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Sequence, Tuple
 
 from easyai.data import Role
-from easyai.common.constants import CHOICES
+from easyai.common import CHOICES
 
 
 @dataclass

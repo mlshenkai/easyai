@@ -15,7 +15,7 @@
 from typing import TYPE_CHECKING, Dict, Tuple
 
 from ...data import Role
-from ...extras.packages import is_gradio_available
+from easyai.common.packages import is_gradio_available
 from ..utils import check_json_schema
 
 

@@ -15,8 +15,8 @@
 from typing import TYPE_CHECKING, Dict
 
 from ...data import TEMPLATES
-from ...extras.constants import METHODS, SUPPORTED_MODELS
-from ...extras.packages import is_gradio_available
+from easyai.common.constants import METHODS, SUPPORTED_MODELS
+from easyai.common.packages import is_gradio_available
 from ..common import get_model_info, list_checkpoints, save_config
 from ..utils import can_quantize
 

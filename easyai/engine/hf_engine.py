@@ -23,8 +23,8 @@ from transformers import GenerationConfig, TextIteratorStreamer
 
 from ..data import get_template_and_fix_tokenizer
 from easyai.common.logging import get_logger
-from easyai.common.misc import get_logits_processor
-from ..models import load_model, load_tokenizer
+from easyai.common import get_logits_processor
+from easyai.models import load_model, load_tokenizer
 from .base_engine import BaseEngine, Response
 
 

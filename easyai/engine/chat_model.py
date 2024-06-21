@@ -19,16 +19,14 @@ import asyncio
 from threading import Thread
 from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, Generator, List, Optional, Sequence
 
-from easyai.common.misc import torch_gc
+from easyai.common import torch_gc
 from ..configs import get_infer_args
 from .hf_engine import HuggingfaceEngine
 from .vllm_engine import VllmEngine
 
 
 if TYPE_CHECKING:
-    from numpy.typing import NDArray
-
-    from .base_engine import BaseEngine, Response
+    pass
 
 
 def _start_background_loop(loop: "asyncio.AbstractEventLoop") -> None:

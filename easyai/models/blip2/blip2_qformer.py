@@ -4,13 +4,12 @@
 # @File: blip2_qformer
 # @Email: mlshenkai@163.com
 import math
-import re
 from typing import Optional, Tuple, Union, Dict, Any
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.checkpoint
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import DictConfig
 from transformers import (
     Blip2PreTrainedModel,
     BertTokenizer,
@@ -29,12 +28,12 @@ from transformers.pytorch_utils import (
     logger,
 )
 
-from easyai.common.dist_utils import get_rank
-from easyai.common.normalization import Fp32LayerNorm
+from easyai.common import get_rank
+from easyai.common import Fp32LayerNorm
 from easyai.models.blip2.blip2_vision import Blip2VisionModel
-from easyai.common.tensor_utils import concat_all_gather, all_gather_with_grad
+from easyai.common import concat_all_gather, all_gather_with_grad
 from easyai.models.blip2.base_blip2_model import Blip2BaseModel
-from easyai.common.registry import registry
+from easyai.common import registry
 from easyai.models.blip2.configuration_blip2 import Blip2Config, Blip2QFormerConfig
 
 

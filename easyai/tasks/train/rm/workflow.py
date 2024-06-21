@@ -39,10 +39,10 @@
 
 from typing import TYPE_CHECKING, List, Optional
 
-from easyai.common.misc import fix_valuehead_checkpoint
+from easyai.common import fix_valuehead_checkpoint
 from easyai.data import PairwiseDataCollatorWithPadding, get_dataset, split_dataset
-from easyai.common.callbacks import FixValueHeadModelCallback
-from easyai.common.ploting import plot_loss
+from easyai.common import FixValueHeadModelCallback
+from easyai.common import plot_loss
 from easyai.models import load_model, load_tokenizer
 from ..trainer_utils import create_modelcard_and_push
 from .metric import compute_accuracy
@@ -50,9 +50,7 @@ from .trainer import PairwiseTrainer
 
 
 if TYPE_CHECKING:
-    from transformers import Seq2SeqTrainingArguments, TrainerCallback
-
-    from easyai.configs import DataArguments, FinetuningArguments, ModelArguments
+    pass
 
 
 def run_rm(

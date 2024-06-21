@@ -14,13 +14,11 @@
 
 from typing import TYPE_CHECKING
 
-from easyai.common.constants import MOD_SUPPORTED_MODELS
+from easyai.common import MOD_SUPPORTED_MODELS
 
 
 if TYPE_CHECKING:
-    from transformers import PretrainedConfig, PreTrainedModel
-
-    from easyai.configs import ModelArguments
+    pass
 
 
 def load_mod_pretrained_model(**init_kwargs) -> "PreTrainedModel":

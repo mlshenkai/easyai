@@ -20,23 +20,16 @@ from typing import TYPE_CHECKING, List, Optional
 from transformers import DataCollatorWithPadding
 
 from easyai.data import get_dataset
-from easyai.common.callbacks import FixValueHeadModelCallback
-from easyai.common.misc import fix_valuehead_checkpoint
-from easyai.common.ploting import plot_loss
+from easyai.common import FixValueHeadModelCallback
+from easyai.common import fix_valuehead_checkpoint
+from easyai.common import plot_loss
 from easyai.models import load_model, load_tokenizer
 from ..trainer_utils import create_ref_model, create_reward_model
 from .trainer import CustomPPOTrainer
 
 
 if TYPE_CHECKING:
-    from transformers import Seq2SeqTrainingArguments, TrainerCallback
-
-    from easyai.configs import (
-        DataArguments,
-        FinetuningArguments,
-        GeneratingArguments,
-        ModelArguments,
-    )
+    pass
 
 
 def run_ppo(

@@ -19,10 +19,10 @@ from typing import TYPE_CHECKING, List, Optional
 
 from transformers import DataCollatorForSeq2Seq
 
-from easyai.common.misc import get_logits_processor
+from easyai.common import get_logits_processor
 from easyai.data import get_dataset, split_dataset
-from easyai.common.constants import IGNORE_INDEX
-from easyai.common.ploting import plot_loss
+from easyai.common import IGNORE_INDEX
+from easyai.common import plot_loss
 from easyai.models import load_model, load_tokenizer
 from ..trainer_utils import create_modelcard_and_push
 from .metric import ComputeMetrics

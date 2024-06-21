@@ -49,7 +49,7 @@ from tqdm import tqdm, trange
 from transformers.utils import cached_file
 
 from easyai.data import get_template_and_fix_tokenizer
-from easyai.common.constants import CHOICES, SUBJECTS
+from easyai.common import CHOICES, SUBJECTS
 from easyai.configs import get_eval_args
 from easyai.models import load_model, load_tokenizer
 from .template import get_eval_template

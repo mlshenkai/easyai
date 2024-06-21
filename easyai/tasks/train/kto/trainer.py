@@ -26,7 +26,7 @@ from transformers import Trainer
 from trl import KTOTrainer
 from trl.trainer import disable_dropout_in_model
 
-from easyai.common.constants import IGNORE_INDEX
+from easyai.common import IGNORE_INDEX
 from ..trainer_utils import (
     create_custom_optimzer,
     create_custom_scheduler,
@@ -36,9 +36,6 @@ from ..trainer_utils import (
 
 if TYPE_CHECKING:
     import torch.utils.data
-    from transformers import PreTrainedModel, ProcessorMixin
-
-    from easyai.configs import FinetuningArguments
 
 
 class CustomKTOTrainer(KTOTrainer):

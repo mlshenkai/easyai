@@ -24,7 +24,7 @@ from transformers import (
 from trl import AutoModelForCausalLMWithValueHead
 
 from easyai.common.logging import get_logger
-from easyai.common.misc import count_parameters, try_download_model_from_ms
+from easyai.common import count_parameters, try_download_model_from_ms
 from .adapter import init_adapter
 from .model_utils.misc import register_autoclass
 from .model_utils.mod import convert_pretrained_model_to_mod, load_mod_pretrained_model

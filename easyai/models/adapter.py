@@ -16,7 +16,7 @@ import re
 from typing import TYPE_CHECKING
 
 import torch
-from peft import LoraConfig, LoraModel, PeftModel, TaskType, get_peft_model
+from peft import LoraConfig, PeftModel, TaskType, get_peft_model
 from transformers.integrations import is_deepspeed_zero3_enabled
 from transformers.modeling_utils import is_fsdp_enabled
 
@@ -27,10 +27,7 @@ from .model_utils.unsloth import get_unsloth_peft_model, load_unsloth_peft_model
 
 
 if TYPE_CHECKING:
-    from transformers import PretrainedConfig, PreTrainedModel
-
-    from easyai.configs import FinetuningArguments, ModelArguments
-
+    pass
 
 logger = get_logger(__name__)
 

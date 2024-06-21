@@ -26,12 +26,11 @@ from transformers import Trainer
 from transformers.optimization import get_scheduler
 from transformers.pytorch_utils import ALL_LAYERNORM_LAYERS
 from transformers.trainer_pt_utils import get_parameter_names
-
 from easyai.common.constants import IGNORE_INDEX
 from easyai.common.logging import get_logger
-from easyai.common.packages import is_galore_available
+from easyai.common import is_galore_available
 from easyai.configs import FinetuningArguments, ModelArguments
-from ..modelss import (
+from easyai.models import (
     find_all_linear_modules,
     load_model,
     load_tokenizer,
@@ -44,12 +43,7 @@ if is_galore_available():
 
 
 if TYPE_CHECKING:
-    from accelerate import Accelerator
-    from transformers import PreTrainedModel, Seq2SeqTrainingArguments
-    from trl import AutoModelForCausalLMWithValueHead
-
-    from easyai.configs import DataArguments
-
+    pass
 
 logger = get_logger(__name__)
 

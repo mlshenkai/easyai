@@ -21,16 +21,14 @@ from typing import TYPE_CHECKING, List, Optional
 from transformers import DataCollatorForLanguageModeling
 
 from easyai.data import get_dataset, split_dataset
-from easyai.common.ploting import plot_loss
+from easyai.common import plot_loss
 from easyai.models import load_model, load_tokenizer
 from ..trainer_utils import create_modelcard_and_push
 from .trainer import CustomTrainer
 
 
 if TYPE_CHECKING:
-    from transformers import Seq2SeqTrainingArguments, TrainerCallback
-
-    from easyai.configs import DataArguments, FinetuningArguments, ModelArguments
+    pass
 
 
 def run_pt(

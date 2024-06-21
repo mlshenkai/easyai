@@ -15,14 +15,11 @@
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from easyai.common.logging import get_logger
-from easyai.common.misc import get_current_device
+from easyai.common import get_current_device
 
 
 if TYPE_CHECKING:
-    from transformers import PretrainedConfig, PreTrainedModel
-
-    from easyai.configs import ModelArguments
-
+    pass
 
 logger = get_logger(__name__)
 

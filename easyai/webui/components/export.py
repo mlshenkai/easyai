@@ -14,10 +14,10 @@
 
 from typing import TYPE_CHECKING, Dict, Generator, List, Union
 
-from ...extras.constants import PEFT_METHODS
-from ...extras.misc import torch_gc
-from ...extras.packages import is_gradio_available
-from ...train.tuner import export_model
+from easyai.common.constants import PEFT_METHODS
+from easyai.common.misc import torch_gc
+from easyai.common.packages import is_gradio_available
+from easyai.tasks.train.tuner import export_model
 from ..common import get_save_dir
 from ..locales import ALERTS
 

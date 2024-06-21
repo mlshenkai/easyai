@@ -4,7 +4,7 @@
 # @File: configuration_llama3
 # @Email: mlshenkai@163.com
 from typing import Optional
-from easyai.common.registry import registry
+from easyai.common import registry
 from transformers import LlamaConfig
 
 
