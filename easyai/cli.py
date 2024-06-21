@@ -18,7 +18,7 @@ import subprocess
 import sys
 from enum import Enum, unique
 
-from . import launcher
+from easyai import launcher
 from .api.app import run_api
 from .engine.chat_model import run_chat
 from .tasks.eval.evaluator import run_eval
@@ -118,3 +118,7 @@ def main():
         print(USAGE)
     else:
         raise NotImplementedError("Unknown command: {}".format(command))
+
+
+if __name__ == "__main__":
+    main()
