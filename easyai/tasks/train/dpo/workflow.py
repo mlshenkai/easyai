@@ -1,7 +1,7 @@
 # Copyright 2024 HuggingFace Inc. and the LlamaFactory team.
 #
 # This code is inspired by the HuggingFace's TRL library.
-# https://github.com/huggingface/trl/blob/v0.8.0/examples/scripts/kto.py
+# https://github.com/huggingface/trl/blob/v0.8.0/examples/scripts/dpo.py
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 
 from typing import TYPE_CHECKING, List, Optional
 
-from ...data import KTODataCollatorWithPadding, get_dataset, split_dataset
+from easyai.data import PairwiseDataCollatorWithPadding, get_dataset, split_dataset
 from easyai.common.constants import IGNORE_INDEX
 from easyai.common.ploting import plot_loss
 from easyai.configs import ModelArguments
-from ...models import load_model, load_tokenizer
+from easyai.models import load_model, load_tokenizer
 from ..trainer_utils import create_modelcard_and_push, create_ref_model
-from .trainer import CustomKTOTrainer
+from .trainer import CustomDPOTrainer
 
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from easyai.configs import DataArguments, FinetuningArguments
 
 
-def run_kto(
+def run_dpo(
     model_args: "ModelArguments",
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",
@@ -42,11 +42,11 @@ def run_kto(
     tokenizer_module = load_tokenizer(model_args)
     tokenizer = tokenizer_module["tokenizer"]
     dataset = get_dataset(
-        model_args, data_args, training_args, stage="kto", **tokenizer_module
+        model_args, data_args, training_args, stage="rm", **tokenizer_module
     )
     model = load_model(tokenizer, model_args, finetuning_args, training_args.do_train)
 
-    data_collator = KTODataCollatorWithPadding(
+    data_collator = PairwiseDataCollatorWithPadding(
         tokenizer=tokenizer,
         pad_to_multiple_of=8,
         label_pad_token_id=IGNORE_INDEX
@@ -55,18 +55,21 @@ def run_kto(
     )
 
     # Create reference model
-    if finetuning_args.ref_model is None and (
-        not training_args.do_train
-    ):  # use the model itself
-        ref_model = model
+    if finetuning_args.use_ref_model:
+        if finetuning_args.ref_model is None and (
+            not training_args.do_train
+        ):  # use the model itself
+            ref_model = model
+        else:
+            ref_model = create_ref_model(model_args, finetuning_args)
     else:
-        ref_model = create_ref_model(model_args, finetuning_args)
+        ref_model = None
 
     # Update arguments
     training_args.remove_unused_columns = False  # important for pairwise dataset
 
     # Initialize our Trainer
-    trainer = CustomKTOTrainer(
+    trainer = CustomDPOTrainer(
         model=model,
         ref_model=ref_model,
         args=training_args,
@@ -89,7 +92,7 @@ def run_kto(
         if trainer.is_world_process_zero() and finetuning_args.plot_loss:
             plot_loss(
                 training_args.output_dir,
-                keys=["loss", "eval_loss", "train/rewards/chosen"],
+                keys=["loss", "eval_loss", "rewards/accuracies"],
             )
 
     # Evaluation
@@ -97,7 +100,7 @@ def run_kto(
         metrics = trainer.evaluate(metric_key_prefix="eval")
         if id(model) == id(
             ref_model
-        ):  # unable to compute rewards without a reference model
+        ):  # unable to compute rewards if reference model is the model itself
             remove_keys = [key for key in metrics.keys() if "rewards" in key]
             for key in remove_keys:
                 metrics.pop(key)

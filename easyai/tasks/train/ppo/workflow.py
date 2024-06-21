@@ -19,11 +19,11 @@ from typing import TYPE_CHECKING, List, Optional
 
 from transformers import DataCollatorWithPadding
 
-from ...data import get_dataset
+from easyai.data import get_dataset
 from easyai.common.callbacks import FixValueHeadModelCallback
 from easyai.common.misc import fix_valuehead_checkpoint
 from easyai.common.ploting import plot_loss
-from ...models import load_model, load_tokenizer
+from easyai.models import load_model, load_tokenizer
 from ..trainer_utils import create_ref_model, create_reward_model
 from .trainer import CustomPPOTrainer
 

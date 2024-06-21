@@ -17,11 +17,11 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional
 import torch
 from transformers import PreTrainedModel
 
-from ..data import get_template_and_fix_tokenizer
+from easyai.data import get_template_and_fix_tokenizer
 from easyai.common.callbacks import LogCallback
 from easyai.common.logging import get_logger
 from easyai.configs import get_infer_args, get_train_args
-from ..models import load_model, load_tokenizer
+from easyai.models import load_model, load_tokenizer
 from .dpo import run_dpo
 from .kto import run_kto
 from .ppo import run_ppo

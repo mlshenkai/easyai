@@ -20,9 +20,9 @@ from typing import TYPE_CHECKING, List, Optional
 
 from transformers import DataCollatorForLanguageModeling
 
-from ...data import get_dataset, split_dataset
+from easyai.data import get_dataset, split_dataset
 from easyai.common.ploting import plot_loss
-from ...models import load_model, load_tokenizer
+from easyai.models import load_model, load_tokenizer
 from ..trainer_utils import create_modelcard_and_push
 from .trainer import CustomTrainer
 
