@@ -28,7 +28,8 @@ from .trainer import CustomTrainer
 
 
 if TYPE_CHECKING:
-    pass
+    from easyai.configs import ModelArguments, DataArguments, FinetuningArguments
+    from transformers import Seq2SeqTrainingArguments, TrainerCallback, PreTrainedModel
 
 
 def run_pt(
@@ -36,6 +37,7 @@ def run_pt(
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",
     finetuning_args: "FinetuningArguments",
+    model: Optional["PreTrainedModel"] = None,
     callbacks: Optional[List["TrainerCallback"]] = None,
 ):
     tokenizer_module = load_tokenizer(model_args)
@@ -43,7 +45,10 @@ def run_pt(
     dataset = get_dataset(
         model_args, data_args, training_args, stage="pt", **tokenizer_module
     )
-    model = load_model(tokenizer, model_args, finetuning_args, training_args.do_train)
+    if model is None:
+        model = load_model(
+            tokenizer, model_args, finetuning_args, training_args.do_train
+        )
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
     # Initialize our Trainer

@@ -79,7 +79,9 @@ def load_config() -> Dict[str, Any]:
         return {"lang": None, "last_model": None, "path_dict": {}, "cache_dir": None}
 
 
-def save_config(lang: str, model_name: Optional[str] = None, model_path: Optional[str] = None) -> None:
+def save_config(
+    lang: str, model_name: Optional[str] = None, model_path: Optional[str] = None
+) -> None:
     r"""
     Saves user config.
     """
@@ -101,8 +103,12 @@ def get_model_path(model_name: str) -> str:
     Gets the model path according to the model name.
     """
     user_config = load_config()
-    path_dict: Dict["DownloadSource", str] = SUPPORTED_MODELS.get(model_name, defaultdict(str))
-    model_path = user_config["path_dict"].get(model_name, "") or path_dict.get(DownloadSource.DEFAULT, "")
+    path_dict: Dict["DownloadSource", str] = SUPPORTED_MODELS.get(
+        model_name, defaultdict(str)
+    )
+    model_path = user_config["path_dict"].get(model_name, "") or path_dict.get(
+        DownloadSource.DEFAULT, ""
+    )
     if (
         use_modelscope()
         and path_dict.get(DownloadSource.MODELSCOPE)
@@ -136,7 +142,11 @@ def get_template(model_name: str) -> str:
     r"""
     Gets the template name if the model is a chat model.
     """
-    if model_name and model_name.endswith("Chat") and get_prefix(model_name) in DEFAULT_TEMPLATE:
+    if (
+        model_name
+        and model_name.endswith("Chat")
+        and get_prefix(model_name) in DEFAULT_TEMPLATE
+    ):
         return DEFAULT_TEMPLATE[get_prefix(model_name)]
     return "default"
 
@@ -158,7 +168,8 @@ def list_checkpoints(model_name: str, finetuning_type: str) -> "gr.Dropdown":
         if save_dir and os.path.isdir(save_dir):
             for checkpoint in os.listdir(save_dir):
                 if os.path.isdir(os.path.join(save_dir, checkpoint)) and any(
-                    os.path.isfile(os.path.join(save_dir, checkpoint, name)) for name in CHECKPOINT_NAMES
+                    os.path.isfile(os.path.join(save_dir, checkpoint, name))
+                    for name in CHECKPOINT_NAMES
                 ):
                     checkpoints.append(checkpoint)
 
@@ -180,15 +191,25 @@ def load_dataset_info(dataset_dir: str) -> Dict[str, Dict[str, Any]]:
         with open(os.path.join(dataset_dir, DATA_CONFIG), "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as err:
-        logger.warning("Cannot open {} due to {}.".format(os.path.join(dataset_dir, DATA_CONFIG), str(err)))
+        logger.warning(
+            "Cannot open {} due to {}.".format(
+                os.path.join(dataset_dir, DATA_CONFIG), str(err)
+            )
+        )
         return {}
 
 
-def list_datasets(dataset_dir: str = None, training_stage: str = list(TRAINING_STAGES.keys())[0]) -> "gr.Dropdown":
+def list_datasets(
+    dataset_dir: str = None, training_stage: str = list(TRAINING_STAGES.keys())[0]
+) -> "gr.Dropdown":
     r"""
     Lists all available datasets in the dataset dir for the training stage.
     """
-    dataset_info = load_dataset_info(dataset_dir if dataset_dir is not None else DEFAULT_DATA_DIR)
+    dataset_info = load_dataset_info(
+        dataset_dir if dataset_dir is not None else DEFAULT_DATA_DIR
+    )
     ranking = TRAINING_STAGES[training_stage] in STAGES_USE_PAIR_DATA
-    datasets = [k for k, v in dataset_info.items() if v.get("ranking", False) == ranking]
+    datasets = [
+        k for k, v in dataset_info.items() if v.get("ranking", False) == ranking
+    ]
     return gr.Dropdown(choices=datasets)

@@ -30,11 +30,21 @@ class EvalTemplate:
         input: a dict with keys {"question", "A", "B", "C", "D", "answer"}
         output: a tuple of (prompt, response)
         """
-        candidates = [self.choice.format(choice=ch, content=example[ch]) for ch in CHOICES if ch in example]
-        return "".join([example["question"]] + candidates + [self.answer]), example["answer"]
+        candidates = [
+            self.choice.format(choice=ch, content=example[ch])
+            for ch in CHOICES
+            if ch in example
+        ]
+        return (
+            "".join([example["question"]] + candidates + [self.answer]),
+            example["answer"],
+        )
 
     def format_example(
-        self, target_data: Dict[str, str], support_set: Sequence[Dict[str, str]], subject_name: str
+        self,
+        target_data: Dict[str, str],
+        support_set: Sequence[Dict[str, str]],
+        subject_name: str,
     ) -> List[Dict[str, str]]:
         r"""
         Converts dataset examples to messages.
@@ -48,7 +58,9 @@ class EvalTemplate:
         prompt, response = self._parse_example(target_data)
         messages.append({"role": Role.USER.value, "content": prompt})
         messages.append({"role": Role.ASSISTANT.value, "content": response})
-        messages[0]["content"] = self.system.format(subject=subject_name) + messages[0]["content"]
+        messages[0]["content"] = (
+            self.system.format(subject=subject_name) + messages[0]["content"]
+        )
         return messages
 
 

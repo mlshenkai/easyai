@@ -36,7 +36,9 @@ class Engine:
         if not demo_mode:
             create_ds_config()
 
-    def _update_component(self, input_dict: Dict[str, Dict[str, Any]]) -> Dict["Component", "Component"]:
+    def _update_component(
+        self, input_dict: Dict[str, Dict[str, Any]]
+    ) -> Dict["Component", "Component"]:
         r"""
         Gets the dict to update the components.
         """
@@ -51,7 +53,10 @@ class Engine:
         user_config = load_config() if not self.demo_mode else {}
         lang = user_config.get("lang", None) or "en"
 
-        init_dict = {"top.lang": {"value": lang}, "infer.chat_box": {"visible": self.chatter.loaded}}
+        init_dict = {
+            "top.lang": {"value": lang},
+            "infer.chat_box": {"visible": self.chatter.loaded},
+        }
 
         if not self.pure_chat:
             current_time = get_time()
@@ -67,7 +72,10 @@ class Engine:
         yield self._update_component(init_dict)
 
         if self.runner.running and not self.demo_mode and not self.pure_chat:
-            yield {elem: elem.__class__(value=value) for elem, value in self.runner.running_data.items()}
+            yield {
+                elem: elem.__class__(value=value)
+                for elem, value in self.runner.running_data.items()
+            }
             if self.runner.do_train:
                 yield self._update_component({"train.resume_btn": {"value": True}})
             else:

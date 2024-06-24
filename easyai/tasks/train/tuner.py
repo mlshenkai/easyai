@@ -50,7 +50,9 @@ def run_exp(
     callbacks.append(LogCallback(training_args.output_dir))
 
     if finetuning_args.stage == "pt":
-        run_pt(model_args, data_args, training_args, finetuning_args, callbacks)
+        run_pt(
+            model_args, data_args, training_args, finetuning_args, callbacks=callbacks
+        )
     elif finetuning_args.stage == "sft":
         run_sft(
             model_args,
@@ -58,10 +60,12 @@ def run_exp(
             training_args,
             finetuning_args,
             generating_args,
-            callbacks,
+            callbacks=callbacks,
         )
     elif finetuning_args.stage == "rm":
-        run_rm(model_args, data_args, training_args, finetuning_args, callbacks)
+        run_rm(
+            model_args, data_args, training_args, finetuning_args, callbacks=callbacks
+        )
     elif finetuning_args.stage == "ppo":
         run_ppo(
             model_args,
@@ -69,12 +73,16 @@ def run_exp(
             training_args,
             finetuning_args,
             generating_args,
-            callbacks,
+            callbacks=callbacks,
         )
     elif finetuning_args.stage == "dpo":
-        run_dpo(model_args, data_args, training_args, finetuning_args, callbacks)
+        run_dpo(
+            model_args, data_args, training_args, finetuning_args, callbacks=callbacks
+        )
     elif finetuning_args.stage == "kto":
-        run_kto(model_args, data_args, training_args, finetuning_args, callbacks)
+        run_kto(
+            model_args, data_args, training_args, finetuning_args, callbacks=callbacks
+        )
     else:
         raise ValueError("Unknown task.")
 

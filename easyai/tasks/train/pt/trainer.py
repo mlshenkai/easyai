@@ -27,7 +27,8 @@ from ..trainer_utils import (
 
 
 if TYPE_CHECKING:
-    pass
+    from transformers import ProcessorMixin
+    from easyai.configs import FinetuningArguments
 
 
 logger = get_logger(__name__)

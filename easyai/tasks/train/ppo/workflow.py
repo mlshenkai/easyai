@@ -38,6 +38,7 @@ def run_ppo(
     training_args: "Seq2SeqTrainingArguments",
     finetuning_args: "FinetuningArguments",
     generating_args: "GeneratingArguments",
+    model: Optional["PreTrainedModel"] = None,
     callbacks: Optional[List["TrainerCallback"]] = None,
 ):
     tokenizer_module = load_tokenizer(model_args)
@@ -45,13 +46,14 @@ def run_ppo(
     dataset = get_dataset(
         model_args, data_args, training_args, stage="ppo", **tokenizer_module
     )
-    model = load_model(
-        tokenizer,
-        model_args,
-        finetuning_args,
-        training_args.do_train,
-        add_valuehead=True,
-    )
+    if model is None:
+        model = load_model(
+            tokenizer,
+            model_args,
+            finetuning_args,
+            training_args.do_train,
+            add_valuehead=True,
+        )
 
     tokenizer.padding_side = (
         "left"  # use left-padding in generation while using right-padding in training

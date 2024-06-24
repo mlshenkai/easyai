@@ -22,7 +22,13 @@ import psutil
 from transformers.trainer_utils import get_last_checkpoint
 from yaml import safe_dump, safe_load
 
-from ..common.constants import PEFT_METHODS, RUNNING_LOG, TRAINER_LOG, TRAINING_ARGS, TRAINING_STAGES
+from ..common.constants import (
+    PEFT_METHODS,
+    RUNNING_LOG,
+    TRAINER_LOG,
+    TRAINING_ARGS,
+    TRAINING_STAGES,
+)
 from ..common.packages import is_gradio_available, is_matplotlib_available
 from ..common.ploting import gen_loss_plot
 from .common import DEFAULT_CACHE_DIR, DEFAULT_CONFIG_DIR, get_save_dir
@@ -55,7 +61,9 @@ def can_quantize(finetuning_type: str) -> "gr.Dropdown":
         return gr.Dropdown(interactive=True)
 
 
-def change_stage(training_stage: str = list(TRAINING_STAGES.keys())[0]) -> Tuple[List[str], bool]:
+def change_stage(
+    training_stage: str = list(TRAINING_STAGES.keys())[0],
+) -> Tuple[List[str], bool]:
     r"""
     Modifys states after changing the training stage.
     """
@@ -84,7 +92,11 @@ def clean_cmd(args: Dict[str, Any]) -> Dict[str, Any]:
     Removes args with NoneType or False or empty string value.
     """
     no_skip_keys = ["packing"]
-    return {k: v for k, v in args.items() if (k in no_skip_keys) or (v is not None and v is not False and v != "")}
+    return {
+        k: v
+        for k, v in args.items()
+        if (k in no_skip_keys) or (v is not None and v is not False and v != "")
+    }
 
 
 def gen_cmd(args: Dict[str, Any]) -> str:
@@ -129,7 +141,9 @@ def get_time() -> str:
     return datetime.now().strftime(r"%Y-%m-%d-%H-%M-%S")
 
 
-def get_trainer_info(output_path: os.PathLike, do_train: bool) -> Tuple[str, "gr.Slider", Optional["gr.Plot"]]:
+def get_trainer_info(
+    output_path: os.PathLike, do_train: bool
+) -> Tuple[str, "gr.Slider", Optional["gr.Plot"]]:
     r"""
     Gets training infomation for monitor.
     """
@@ -198,7 +212,9 @@ def list_config_paths(current_time: str) -> "gr.Dropdown":
     return gr.Dropdown(choices=config_files)
 
 
-def list_output_dirs(model_name: Optional[str], finetuning_type: str, current_time: str) -> "gr.Dropdown":
+def list_output_dirs(
+    model_name: Optional[str], finetuning_type: str, current_time: str
+) -> "gr.Dropdown":
     r"""
     Lists all the directories that can resume from.
     """
@@ -208,7 +224,10 @@ def list_output_dirs(model_name: Optional[str], finetuning_type: str, current_ti
         if save_dir and os.path.isdir(save_dir):
             for folder in os.listdir(save_dir):
                 output_dir = os.path.join(save_dir, folder)
-                if os.path.isdir(output_dir) and get_last_checkpoint(output_dir) is not None:
+                if (
+                    os.path.isdir(output_dir)
+                    and get_last_checkpoint(output_dir) is not None
+                ):
                     output_dirs.append(folder)
 
     return gr.Dropdown(choices=output_dirs)
@@ -249,11 +268,17 @@ def create_ds_config() -> None:
         "contiguous_gradients": True,
         "round_robin_gradients": True,
     }
-    with open(os.path.join(DEFAULT_CACHE_DIR, "ds_z2_config.json"), "w", encoding="utf-8") as f:
+    with open(
+        os.path.join(DEFAULT_CACHE_DIR, "ds_z2_config.json"), "w", encoding="utf-8"
+    ) as f:
         json.dump(ds_config, f, indent=2)
 
     ds_config["zero_optimization"]["offload_optimizer"] = offload_config
-    with open(os.path.join(DEFAULT_CACHE_DIR, "ds_z2_offload_config.json"), "w", encoding="utf-8") as f:
+    with open(
+        os.path.join(DEFAULT_CACHE_DIR, "ds_z2_offload_config.json"),
+        "w",
+        encoding="utf-8",
+    ) as f:
         json.dump(ds_config, f, indent=2)
 
     ds_config["zero_optimization"] = {
@@ -268,10 +293,16 @@ def create_ds_config() -> None:
         "stage3_max_reuse_distance": 1e9,
         "stage3_gather_16bit_weights_on_model_save": True,
     }
-    with open(os.path.join(DEFAULT_CACHE_DIR, "ds_z3_config.json"), "w", encoding="utf-8") as f:
+    with open(
+        os.path.join(DEFAULT_CACHE_DIR, "ds_z3_config.json"), "w", encoding="utf-8"
+    ) as f:
         json.dump(ds_config, f, indent=2)
 
     ds_config["zero_optimization"]["offload_optimizer"] = offload_config
     ds_config["zero_optimization"]["offload_param"] = offload_config
-    with open(os.path.join(DEFAULT_CACHE_DIR, "ds_z3_offload_config.json"), "w", encoding="utf-8") as f:
+    with open(
+        os.path.join(DEFAULT_CACHE_DIR, "ds_z3_offload_config.json"),
+        "w",
+        encoding="utf-8",
+    ) as f:
         json.dump(ds_config, f, indent=2)

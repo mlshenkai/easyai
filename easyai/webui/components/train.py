@@ -40,23 +40,36 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
 
     with gr.Row():
         training_stage = gr.Dropdown(
-            choices=list(TRAINING_STAGES.keys()), value=list(TRAINING_STAGES.keys())[0], scale=1
+            choices=list(TRAINING_STAGES.keys()),
+            value=list(TRAINING_STAGES.keys())[0],
+            scale=1,
         )
         dataset_dir = gr.Textbox(value=DEFAULT_DATA_DIR, scale=1)
         dataset = gr.Dropdown(multiselect=True, allow_custom_value=True, scale=4)
         preview_elems = create_preview_box(dataset_dir, dataset)
 
     input_elems.update({training_stage, dataset_dir, dataset})
-    elem_dict.update(dict(training_stage=training_stage, dataset_dir=dataset_dir, dataset=dataset, **preview_elems))
+    elem_dict.update(
+        dict(
+            training_stage=training_stage,
+            dataset_dir=dataset_dir,
+            dataset=dataset,
+            **preview_elems
+        )
+    )
 
     with gr.Row():
         learning_rate = gr.Textbox(value="5e-5")
         num_train_epochs = gr.Textbox(value="3.0")
         max_grad_norm = gr.Textbox(value="1.0")
         max_samples = gr.Textbox(value="100000")
-        compute_type = gr.Dropdown(choices=["fp16", "bf16", "fp32", "pure_bf16"], value="fp16")
+        compute_type = gr.Dropdown(
+            choices=["fp16", "bf16", "fp32", "pure_bf16"], value="fp16"
+        )
 
-    input_elems.update({learning_rate, num_train_epochs, max_grad_norm, max_samples, compute_type})
+    input_elems.update(
+        {learning_rate, num_train_epochs, max_grad_norm, max_samples, compute_type}
+    )
     elem_dict.update(
         dict(
             learning_rate=learning_rate,
@@ -70,11 +83,23 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
     with gr.Row():
         cutoff_len = gr.Slider(minimum=4, maximum=65536, value=1024, step=1)
         batch_size = gr.Slider(minimum=1, maximum=1024, value=2, step=1)
-        gradient_accumulation_steps = gr.Slider(minimum=1, maximum=1024, value=8, step=1)
+        gradient_accumulation_steps = gr.Slider(
+            minimum=1, maximum=1024, value=8, step=1
+        )
         val_size = gr.Slider(minimum=0, maximum=1, value=0, step=0.001)
-        lr_scheduler_type = gr.Dropdown(choices=[scheduler.value for scheduler in SchedulerType], value="cosine")
+        lr_scheduler_type = gr.Dropdown(
+            choices=[scheduler.value for scheduler in SchedulerType], value="cosine"
+        )
 
-    input_elems.update({cutoff_len, batch_size, gradient_accumulation_steps, val_size, lr_scheduler_type})
+    input_elems.update(
+        {
+            cutoff_len,
+            batch_size,
+            gradient_accumulation_steps,
+            val_size,
+            lr_scheduler_type,
+        }
+    )
     elem_dict.update(
         dict(
             cutoff_len=cutoff_len,
@@ -140,11 +165,15 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
 
     with gr.Accordion(open=False) as freeze_tab:
         with gr.Row():
-            freeze_trainable_layers = gr.Slider(minimum=-128, maximum=128, value=2, step=1)
+            freeze_trainable_layers = gr.Slider(
+                minimum=-128, maximum=128, value=2, step=1
+            )
             freeze_trainable_modules = gr.Textbox(value="all")
             freeze_extra_modules = gr.Textbox()
 
-    input_elems.update({freeze_trainable_layers, freeze_trainable_modules, freeze_extra_modules})
+    input_elems.update(
+        {freeze_trainable_layers, freeze_trainable_modules, freeze_extra_modules}
+    )
     elem_dict.update(
         dict(
             freeze_tab=freeze_tab,
@@ -203,13 +232,25 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
         with gr.Row():
             pref_beta = gr.Slider(minimum=0, maximum=1, value=0.1, step=0.01)
             pref_ftx = gr.Slider(minimum=0, maximum=10, value=0, step=0.01)
-            pref_loss = gr.Dropdown(choices=["sigmoid", "hinge", "ipo", "kto_pair", "orpo", "simpo"], value="sigmoid")
+            pref_loss = gr.Dropdown(
+                choices=["sigmoid", "hinge", "ipo", "kto_pair", "orpo", "simpo"],
+                value="sigmoid",
+            )
             reward_model = gr.Dropdown(multiselect=True, allow_custom_value=True)
             with gr.Column():
                 ppo_score_norm = gr.Checkbox()
                 ppo_whiten_rewards = gr.Checkbox()
 
-    input_elems.update({pref_beta, pref_ftx, pref_loss, reward_model, ppo_score_norm, ppo_whiten_rewards})
+    input_elems.update(
+        {
+            pref_beta,
+            pref_ftx,
+            pref_loss,
+            reward_model,
+            ppo_score_norm,
+            ppo_whiten_rewards,
+        }
+    )
     elem_dict.update(
         dict(
             rlhf_tab=rlhf_tab,
@@ -226,11 +267,15 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
         with gr.Row():
             use_galore = gr.Checkbox()
             galore_rank = gr.Slider(minimum=1, maximum=1024, value=16, step=1)
-            galore_update_interval = gr.Slider(minimum=1, maximum=1024, value=200, step=1)
+            galore_update_interval = gr.Slider(
+                minimum=1, maximum=1024, value=200, step=1
+            )
             galore_scale = gr.Slider(minimum=0, maximum=1, value=0.25, step=0.01)
             galore_target = gr.Textbox(value="all")
 
-    input_elems.update({use_galore, galore_rank, galore_update_interval, galore_scale, galore_target})
+    input_elems.update(
+        {use_galore, galore_rank, galore_update_interval, galore_scale, galore_target}
+    )
     elem_dict.update(
         dict(
             galore_tab=galore_tab,
@@ -246,11 +291,22 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
         with gr.Row():
             use_badam = gr.Checkbox()
             badam_mode = gr.Dropdown(choices=["layer", "ratio"], value="layer")
-            badam_switch_mode = gr.Dropdown(choices=["ascending", "descending", "random", "fixed"], value="ascending")
+            badam_switch_mode = gr.Dropdown(
+                choices=["ascending", "descending", "random", "fixed"],
+                value="ascending",
+            )
             badam_switch_interval = gr.Slider(minimum=1, maximum=1024, value=50, step=1)
             badam_update_ratio = gr.Slider(minimum=0, maximum=1, value=0.05, step=0.01)
 
-    input_elems.update({use_badam, badam_mode, badam_switch_mode, badam_switch_interval, badam_update_ratio})
+    input_elems.update(
+        {
+            use_badam,
+            badam_mode,
+            badam_switch_mode,
+            badam_switch_interval,
+            badam_update_ratio,
+        }
+    )
     elem_dict.update(
         dict(
             badam_tab=badam_tab,
@@ -277,7 +333,9 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
                 config_path = gr.Dropdown(allow_custom_value=True)
 
             with gr.Row():
-                device_count = gr.Textbox(value=str(get_device_count() or 1), interactive=False)
+                device_count = gr.Textbox(
+                    value=str(get_device_count() or 1), interactive=False
+                )
                 ds_stage = gr.Dropdown(choices=["none", "2", "3"], value="none")
                 ds_offload = gr.Checkbox()
 
@@ -313,27 +371,55 @@ def create_train_tab(engine: "Engine") -> Dict[str, "Component"]:
     )
     output_elems = [output_box, progress_bar, loss_viewer]
 
-    cmd_preview_btn.click(engine.runner.preview_train, input_elems, output_elems, concurrency_limit=None)
+    cmd_preview_btn.click(
+        engine.runner.preview_train, input_elems, output_elems, concurrency_limit=None
+    )
     start_btn.click(engine.runner.run_train, input_elems, output_elems)
     stop_btn.click(engine.runner.set_abort)
-    resume_btn.change(engine.runner.monitor, outputs=output_elems, concurrency_limit=None)
+    resume_btn.change(
+        engine.runner.monitor, outputs=output_elems, concurrency_limit=None
+    )
 
     lang = engine.manager.get_elem_by_id("top.lang")
     model_name: "gr.Dropdown" = engine.manager.get_elem_by_id("top.model_name")
-    finetuning_type: "gr.Dropdown" = engine.manager.get_elem_by_id("top.finetuning_type")
+    finetuning_type: "gr.Dropdown" = engine.manager.get_elem_by_id(
+        "top.finetuning_type"
+    )
 
-    arg_save_btn.click(engine.runner.save_args, input_elems, output_elems, concurrency_limit=None)
+    arg_save_btn.click(
+        engine.runner.save_args, input_elems, output_elems, concurrency_limit=None
+    )
     arg_load_btn.click(
-        engine.runner.load_args, [lang, config_path], list(input_elems) + [output_box], concurrency_limit=None
+        engine.runner.load_args,
+        [lang, config_path],
+        list(input_elems) + [output_box],
+        concurrency_limit=None,
     )
 
     dataset.focus(list_datasets, [dataset_dir, training_stage], [dataset], queue=False)
-    training_stage.change(change_stage, [training_stage], [dataset, packing], queue=False)
-    reward_model.focus(list_checkpoints, [model_name, finetuning_type], [reward_model], queue=False)
-    model_name.change(list_output_dirs, [model_name, finetuning_type, current_time], [output_dir], queue=False)
-    finetuning_type.change(list_output_dirs, [model_name, finetuning_type, current_time], [output_dir], queue=False)
+    training_stage.change(
+        change_stage, [training_stage], [dataset, packing], queue=False
+    )
+    reward_model.focus(
+        list_checkpoints, [model_name, finetuning_type], [reward_model], queue=False
+    )
+    model_name.change(
+        list_output_dirs,
+        [model_name, finetuning_type, current_time],
+        [output_dir],
+        queue=False,
+    )
+    finetuning_type.change(
+        list_output_dirs,
+        [model_name, finetuning_type, current_time],
+        [output_dir],
+        queue=False,
+    )
     output_dir.change(
-        list_output_dirs, [model_name, finetuning_type, current_time], [output_dir], concurrency_limit=None
+        list_output_dirs,
+        [model_name, finetuning_type, current_time],
+        [output_dir],
+        concurrency_limit=None,
     )
     output_dir.input(
         engine.runner.check_output_dir,

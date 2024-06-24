@@ -24,7 +24,15 @@ from ..common.misc import is_gpu_or_npu_available, torch_gc
 from ..common.packages import is_gradio_available
 from .common import DEFAULT_CACHE_DIR, DEFAULT_CONFIG_DIR, get_save_dir, load_config
 from .locales import ALERTS, LOCALES
-from .utils import abort_process, gen_cmd, get_eval_results, get_trainer_info, load_args, save_args, save_cmd
+from .utils import (
+    abort_process,
+    gen_cmd,
+    get_eval_results,
+    get_trainer_info,
+    load_args,
+    save_args,
+    save_cmd,
+)
 
 
 if is_gradio_available():
@@ -54,9 +62,15 @@ class Runner:
         if self.trainer is not None:
             abort_process(self.trainer.pid)
 
-    def _initialize(self, data: Dict["Component", Any], do_train: bool, from_preview: bool) -> str:
+    def _initialize(
+        self, data: Dict["Component", Any], do_train: bool, from_preview: bool
+    ) -> str:
         get = lambda elem_id: data[self.manager.get_elem_by_id(elem_id)]
-        lang, model_name, model_path = get("top.lang"), get("top.model_name"), get("top.model_path")
+        lang, model_name, model_path = (
+            get("top.lang"),
+            get("top.model_name"),
+            get("top.model_path"),
+        )
         dataset = get("train.dataset") if do_train else get("eval.dataset")
 
         if self.running:
@@ -111,9 +125,13 @@ class Runner:
             cache_dir=user_config.get("cache_dir", None),
             preprocessing_num_workers=16,
             finetuning_type=finetuning_type,
-            quantization_bit=int(get("top.quantization_bit")) if get("top.quantization_bit") in ["8", "4"] else None,
+            quantization_bit=int(get("top.quantization_bit"))
+            if get("top.quantization_bit") in ["8", "4"]
+            else None,
             template=get("top.template"),
-            rope_scaling=get("top.rope_scaling") if get("top.rope_scaling") in ["linear", "dynamic"] else None,
+            rope_scaling=get("top.rope_scaling")
+            if get("top.rope_scaling") in ["linear", "dynamic"]
+            else None,
             flash_attn="fa2" if get("top.booster") == "flashattn2" else "auto",
             use_unsloth=(get("top.booster") == "unsloth"),
             visual_inputs=get("top.visual_inputs"),
@@ -140,7 +158,9 @@ class Runner:
             report_to="all" if get("train.report_to") else "none",
             use_galore=get("train.use_galore"),
             use_badam=get("train.use_badam"),
-            output_dir=get_save_dir(model_name, finetuning_type, get("train.output_dir")),
+            output_dir=get_save_dir(
+                model_name, finetuning_type, get("train.output_dir")
+            ),
             fp16=(get("train.compute_type") == "fp16"),
             bf16=(get("train.compute_type") == "bf16"),
             pure_bf16=(get("train.compute_type") == "pure_bf16"),
@@ -153,10 +173,15 @@ class Runner:
         if get("top.checkpoint_path"):
             if finetuning_type in PEFT_METHODS:  # list
                 args["adapter_name_or_path"] = ",".join(
-                    [get_save_dir(model_name, finetuning_type, adapter) for adapter in get("top.checkpoint_path")]
+                    [
+                        get_save_dir(model_name, finetuning_type, adapter)
+                        for adapter in get("top.checkpoint_path")
+                    ]
                 )
             else:  # str
-                args["model_name_or_path"] = get_save_dir(model_name, finetuning_type, get("top.checkpoint_path"))
+                args["model_name_or_path"] = get_save_dir(
+                    model_name, finetuning_type, get("top.checkpoint_path")
+                )
 
         # freeze config
         if args["finetuning_type"] == "freeze":
@@ -185,10 +210,15 @@ class Runner:
         if args["stage"] == "ppo":
             if finetuning_type in PEFT_METHODS:
                 args["reward_model"] = ",".join(
-                    [get_save_dir(model_name, finetuning_type, adapter) for adapter in get("train.reward_model")]
+                    [
+                        get_save_dir(model_name, finetuning_type, adapter)
+                        for adapter in get("train.reward_model")
+                    ]
                 )
             else:
-                args["reward_model"] = get_save_dir(model_name, finetuning_type, get("train.reward_model"))
+                args["reward_model"] = get_save_dir(
+                    model_name, finetuning_type, get("train.reward_model")
+                )
 
             args["reward_model_type"] = "lora" if finetuning_type == "lora" else "full"
             args["ppo_score_norm"] = get("train.ppo_score_norm")
@@ -225,7 +255,9 @@ class Runner:
         if get("train.ds_stage") != "none":
             ds_stage = get("train.ds_stage")
             ds_offload = "offload_" if get("train.ds_offload") else ""
-            args["deepspeed"] = os.path.join(DEFAULT_CACHE_DIR, "ds_z{}_{}config.json".format(ds_stage, ds_offload))
+            args["deepspeed"] = os.path.join(
+                DEFAULT_CACHE_DIR, "ds_z{}_{}config.json".format(ds_stage, ds_offload)
+            )
 
         return args
 
@@ -240,9 +272,13 @@ class Runner:
             cache_dir=user_config.get("cache_dir", None),
             preprocessing_num_workers=16,
             finetuning_type=finetuning_type,
-            quantization_bit=int(get("top.quantization_bit")) if get("top.quantization_bit") in ["8", "4"] else None,
+            quantization_bit=int(get("top.quantization_bit"))
+            if get("top.quantization_bit") in ["8", "4"]
+            else None,
             template=get("top.template"),
-            rope_scaling=get("top.rope_scaling") if get("top.rope_scaling") in ["linear", "dynamic"] else None,
+            rope_scaling=get("top.rope_scaling")
+            if get("top.rope_scaling") in ["linear", "dynamic"]
+            else None,
             flash_attn="fa2" if get("top.booster") == "flashattn2" else "auto",
             use_unsloth=(get("top.booster") == "unsloth"),
             visual_inputs=get("top.visual_inputs"),
@@ -255,7 +291,9 @@ class Runner:
             max_new_tokens=get("eval.max_new_tokens"),
             top_p=get("eval.top_p"),
             temperature=get("eval.temperature"),
-            output_dir=get_save_dir(model_name, finetuning_type, get("eval.output_dir")),
+            output_dir=get_save_dir(
+                model_name, finetuning_type, get("eval.output_dir")
+            ),
         )
 
         if get("eval.predict"):
@@ -266,47 +304,79 @@ class Runner:
         if get("top.checkpoint_path"):
             if finetuning_type in PEFT_METHODS:  # list
                 args["adapter_name_or_path"] = ",".join(
-                    [get_save_dir(model_name, finetuning_type, adapter) for adapter in get("top.checkpoint_path")]
+                    [
+                        get_save_dir(model_name, finetuning_type, adapter)
+                        for adapter in get("top.checkpoint_path")
+                    ]
                 )
             else:  # str
-                args["model_name_or_path"] = get_save_dir(model_name, finetuning_type, get("top.checkpoint_path"))
+                args["model_name_or_path"] = get_save_dir(
+                    model_name, finetuning_type, get("top.checkpoint_path")
+                )
 
         return args
 
-    def _preview(self, data: Dict["Component", Any], do_train: bool) -> Generator[Dict["Component", str], None, None]:
-        output_box = self.manager.get_elem_by_id("{}.output_box".format("train" if do_train else "eval"))
+    def _preview(
+        self, data: Dict["Component", Any], do_train: bool
+    ) -> Generator[Dict["Component", str], None, None]:
+        output_box = self.manager.get_elem_by_id(
+            "{}.output_box".format("train" if do_train else "eval")
+        )
         error = self._initialize(data, do_train, from_preview=True)
         if error:
             gr.Warning(error)
             yield {output_box: error}
         else:
-            args = self._parse_train_args(data) if do_train else self._parse_eval_args(data)
+            args = (
+                self._parse_train_args(data)
+                if do_train
+                else self._parse_eval_args(data)
+            )
             yield {output_box: gen_cmd(args)}
 
-    def _launch(self, data: Dict["Component", Any], do_train: bool) -> Generator[Dict["Component", Any], None, None]:
-        output_box = self.manager.get_elem_by_id("{}.output_box".format("train" if do_train else "eval"))
+    def _launch(
+        self, data: Dict["Component", Any], do_train: bool
+    ) -> Generator[Dict["Component", Any], None, None]:
+        output_box = self.manager.get_elem_by_id(
+            "{}.output_box".format("train" if do_train else "eval")
+        )
         error = self._initialize(data, do_train, from_preview=False)
         if error:
             gr.Warning(error)
             yield {output_box: error}
         else:
             self.do_train, self.running_data = do_train, data
-            args = self._parse_train_args(data) if do_train else self._parse_eval_args(data)
+            args = (
+                self._parse_train_args(data)
+                if do_train
+                else self._parse_eval_args(data)
+            )
 
             os.makedirs(args["output_dir"], exist_ok=True)
-            save_args(os.path.join(args["output_dir"], LLAMABOARD_CONFIG), self._form_config_dict(data))
+            save_args(
+                os.path.join(args["output_dir"], LLAMABOARD_CONFIG),
+                self._form_config_dict(data),
+            )
 
             env = deepcopy(os.environ)
             env["LLAMABOARD_ENABLED"] = "1"
             if args.get("deepspeed", None) is not None:
                 env["FORCE_TORCHRUN"] = "1"
 
-            self.trainer = Popen("llamafactory-cli train {}".format(save_cmd(args)), env=env, shell=True)
+            self.trainer = Popen(
+                "llamafactory-cli train {}".format(save_cmd(args)), env=env, shell=True
+            )
             yield from self.monitor()
 
     def _form_config_dict(self, data: Dict["Component", Any]) -> Dict[str, Any]:
         config_dict = {}
-        skip_ids = ["top.lang", "top.model_path", "train.output_dir", "train.config_path", "train.device_count"]
+        skip_ids = [
+            "top.lang",
+            "top.model_path",
+            "train.output_dir",
+            "train.config_path",
+            "train.device_count",
+        ]
         for elem, value in data.items():
             elem_id = self.manager.get_id_by_elem(elem)
             if elem_id not in skip_ids:
@@ -331,13 +401,23 @@ class Runner:
         self.running = True
 
         get = lambda elem_id: self.running_data[self.manager.get_elem_by_id(elem_id)]
-        lang, model_name, finetuning_type = get("top.lang"), get("top.model_name"), get("top.finetuning_type")
+        lang, model_name, finetuning_type = (
+            get("top.lang"),
+            get("top.model_name"),
+            get("top.finetuning_type"),
+        )
         output_dir = get("{}.output_dir".format("train" if self.do_train else "eval"))
         output_path = get_save_dir(model_name, finetuning_type, output_dir)
 
-        output_box = self.manager.get_elem_by_id("{}.output_box".format("train" if self.do_train else "eval"))
-        progress_bar = self.manager.get_elem_by_id("{}.progress_bar".format("train" if self.do_train else "eval"))
-        loss_viewer = self.manager.get_elem_by_id("train.loss_viewer") if self.do_train else None
+        output_box = self.manager.get_elem_by_id(
+            "{}.output_box".format("train" if self.do_train else "eval")
+        )
+        progress_bar = self.manager.get_elem_by_id(
+            "{}.progress_bar".format("train" if self.do_train else "eval")
+        )
+        loss_viewer = (
+            self.manager.get_elem_by_id("train.loss_viewer") if self.do_train else None
+        )
 
         while self.trainer is not None:
             if self.aborted:
@@ -346,7 +426,9 @@ class Runner:
                     progress_bar: gr.Slider(visible=False),
                 }
             else:
-                running_log, running_progress, running_loss = get_trainer_info(output_path, self.do_train)
+                running_log, running_progress, running_loss = get_trainer_info(
+                    output_path, self.do_train
+                )
                 return_dict = {
                     output_box: running_log,
                     progress_bar: running_progress,
@@ -369,7 +451,9 @@ class Runner:
                 finish_info = ALERTS["err_failed"][lang]
         else:
             if os.path.exists(os.path.join(output_path, "all_results.json")):
-                finish_info = get_eval_results(os.path.join(output_path, "all_results.json"))
+                finish_info = get_eval_results(
+                    os.path.join(output_path, "all_results.json")
+                )
             else:
                 finish_info = ALERTS["err_failed"][lang]
 
@@ -401,21 +485,33 @@ class Runner:
             gr.Warning(ALERTS["err_config_not_found"][lang])
             return {output_box: ALERTS["err_config_not_found"][lang]}
 
-        output_dict: Dict["Component", Any] = {output_box: ALERTS["info_config_loaded"][lang]}
+        output_dict: Dict["Component", Any] = {
+            output_box: ALERTS["info_config_loaded"][lang]
+        }
         for elem_id, value in config_dict.items():
             output_dict[self.manager.get_elem_by_id(elem_id)] = value
 
         return output_dict
 
-    def check_output_dir(self, lang: str, model_name: str, finetuning_type: str, output_dir: str):
+    def check_output_dir(
+        self, lang: str, model_name: str, finetuning_type: str, output_dir: str
+    ):
         output_box = self.manager.get_elem_by_id("train.output_box")
-        output_dict: Dict["Component", Any] = {output_box: LOCALES["output_box"][lang]["value"]}
-        if model_name and output_dir and os.path.isdir(get_save_dir(model_name, finetuning_type, output_dir)):
+        output_dict: Dict["Component", Any] = {
+            output_box: LOCALES["output_box"][lang]["value"]
+        }
+        if (
+            model_name
+            and output_dir
+            and os.path.isdir(get_save_dir(model_name, finetuning_type, output_dir))
+        ):
             gr.Warning(ALERTS["warn_output_dir_exists"][lang])
             output_dict[output_box] = ALERTS["warn_output_dir_exists"][lang]
 
             output_dir = get_save_dir(model_name, finetuning_type, output_dir)
-            config_dict = load_args(os.path.join(output_dir, LLAMABOARD_CONFIG))  # load llamaboard config
+            config_dict = load_args(
+                os.path.join(output_dir, LLAMABOARD_CONFIG)
+            )  # load llamaboard config
             for elem_id, value in config_dict.items():
                 output_dict[self.manager.get_elem_by_id(elem_id)] = value
 

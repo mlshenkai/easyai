@@ -58,6 +58,7 @@ def run_rm(
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",
     finetuning_args: "FinetuningArguments",
+    model: Optional["PreTrainedModel"] = None,
     callbacks: Optional[List["TrainerCallback"]] = None,
 ):
     tokenizer_module = load_tokenizer(model_args)
@@ -65,13 +66,14 @@ def run_rm(
     dataset = get_dataset(
         model_args, data_args, training_args, stage="rm", **tokenizer_module
     )
-    model = load_model(
-        tokenizer,
-        model_args,
-        finetuning_args,
-        training_args.do_train,
-        add_valuehead=True,
-    )
+    if model is None:
+        model = load_model(
+            tokenizer,
+            model_args,
+            finetuning_args,
+            training_args.do_train,
+            add_valuehead=True,
+        )
     data_collator = PairwiseDataCollatorWithPadding(tokenizer, pad_to_multiple_of=8)
 
     # Update arguments

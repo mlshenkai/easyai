@@ -20,7 +20,11 @@ from typing_extensions import Annotated
 
 from ..engine import ChatModel
 from ..common.misc import torch_gc
-from ..common.packages import is_fastapi_available, is_starlette_available, is_uvicorn_available
+from ..common.packages import (
+    is_fastapi_available,
+    is_starlette_available,
+    is_uvicorn_available,
+)
 from .chat import (
     create_chat_completion_response,
     create_score_evaluation_response,
@@ -68,9 +72,13 @@ def create_app(chat_model: "ChatModel") -> "FastAPI":
     api_key = os.environ.get("API_KEY")
     security = HTTPBearer(auto_error=False)
 
-    async def verify_api_key(auth: Annotated[Optional[HTTPAuthorizationCredentials], Depends(security)]):
+    async def verify_api_key(
+        auth: Annotated[Optional[HTTPAuthorizationCredentials], Depends(security)]
+    ):
         if api_key and (auth is None or auth.credentials != api_key):
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key.")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key."
+            )
 
     @app.get(
         "/v1/models",
@@ -90,7 +98,9 @@ def create_app(chat_model: "ChatModel") -> "FastAPI":
     )
     async def create_chat_completion(request: ChatCompletionRequest):
         if not chat_model.engine.can_generate:
-            raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="Not allowed")
+            raise HTTPException(
+                status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="Not allowed"
+            )
 
         if request.stream:
             generate = create_stream_chat_completion_response(request, chat_model)
@@ -106,7 +116,9 @@ def create_app(chat_model: "ChatModel") -> "FastAPI":
     )
     async def create_score_evaluation(request: ScoreEvaluationRequest):
         if chat_model.engine.can_generate:
-            raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="Not allowed")
+            raise HTTPException(
+                status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="Not allowed"
+            )
 
         return await create_score_evaluation_response(request, chat_model)
 

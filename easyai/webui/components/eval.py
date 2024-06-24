@@ -48,7 +48,14 @@ def create_eval_tab(engine: "Engine") -> Dict[str, "Component"]:
         predict = gr.Checkbox(value=True)
 
     input_elems.update({cutoff_len, max_samples, batch_size, predict})
-    elem_dict.update(dict(cutoff_len=cutoff_len, max_samples=max_samples, batch_size=batch_size, predict=predict))
+    elem_dict.update(
+        dict(
+            cutoff_len=cutoff_len,
+            max_samples=max_samples,
+            batch_size=batch_size,
+            predict=predict,
+        )
+    )
 
     with gr.Row():
         max_new_tokens = gr.Slider(minimum=8, maximum=4096, value=512, step=1)
@@ -57,7 +64,14 @@ def create_eval_tab(engine: "Engine") -> Dict[str, "Component"]:
         output_dir = gr.Textbox()
 
     input_elems.update({max_new_tokens, top_p, temperature, output_dir})
-    elem_dict.update(dict(max_new_tokens=max_new_tokens, top_p=top_p, temperature=temperature, output_dir=output_dir))
+    elem_dict.update(
+        dict(
+            max_new_tokens=max_new_tokens,
+            top_p=top_p,
+            temperature=temperature,
+            output_dir=output_dir,
+        )
+    )
 
     with gr.Row():
         cmd_preview_btn = gr.Button()
@@ -83,10 +97,14 @@ def create_eval_tab(engine: "Engine") -> Dict[str, "Component"]:
     )
     output_elems = [output_box, progress_bar]
 
-    cmd_preview_btn.click(engine.runner.preview_eval, input_elems, output_elems, concurrency_limit=None)
+    cmd_preview_btn.click(
+        engine.runner.preview_eval, input_elems, output_elems, concurrency_limit=None
+    )
     start_btn.click(engine.runner.run_eval, input_elems, output_elems)
     stop_btn.click(engine.runner.set_abort)
-    resume_btn.change(engine.runner.monitor, outputs=output_elems, concurrency_limit=None)
+    resume_btn.change(
+        engine.runner.monitor, outputs=output_elems, concurrency_limit=None
+    )
 
     dataset.focus(list_datasets, [dataset_dir], [dataset], queue=False)
 
