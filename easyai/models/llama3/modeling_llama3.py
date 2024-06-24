@@ -22,7 +22,6 @@ from transformers.modeling_outputs import (
 )
 from torch.nn import BCEWithLogitsLoss, MSELoss, CrossEntropyLoss
 
-from easyai.models import BaseModel
 from easyai.models.llama3.configuration_llama3 import Llama3Config
 from fairscale.nn.model_parallel.layers import (
     ColumnParallelLinear,
@@ -30,7 +29,6 @@ from fairscale.nn.model_parallel.layers import (
     VocabParallelEmbedding,
 )
 import fairscale.nn.model_parallel.initialize as fs_init
-from easyai.common import registry
 
 
 # copied by transformers.models.bart.modeling_bart._make_causal_mask
@@ -380,8 +378,7 @@ class Llama3PreTrainedModel(PreTrainedModel):
                 module.weight.data[module.padding_idx].zero_()
 
 
-@registry.register_model("llama3_model")
-class Llama3Model(Llama3PreTrainedModel, BaseModel):
+class Llama3Model(Llama3PreTrainedModel):
     @classmethod
     def build_model_from_config(cls, config: Llama3Config or dict):
         if isinstance(config, (dict, DictConfig)):
@@ -609,8 +606,7 @@ class Llama3Model(Llama3PreTrainedModel, BaseModel):
         )
 
 
-@registry.register_model("llama3_model_causal_lm")
-class Llama3ModelForCausalLM(Llama3PreTrainedModel, BaseModel):
+class Llama3ModelForCausalLM(Llama3PreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
     def __init__(self, config: Union[Llama3Config, dict]):
@@ -772,7 +768,6 @@ class Llama3ModelForCausalLM(Llama3PreTrainedModel, BaseModel):
         return reordered_past
 
 
-@registry.register_model("llama3_cls_model")
 class Llama3ForSequenceClassification(Llama3PreTrainedModel):
     def __init__(self, config: Union[Llama3Config, dict]):
         if isinstance(config, dict):

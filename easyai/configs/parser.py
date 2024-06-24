@@ -28,6 +28,7 @@ from transformers.trainer_utils import get_last_checkpoint
 from transformers.training_args import ParallelMode
 from transformers.utils import is_torch_bf16_gpu_available
 from transformers.utils.versions import require_version
+import transformers.utils.logging
 
 from easyai.common import CHECKPOINT_NAMES
 from easyai.common.logging import get_logger

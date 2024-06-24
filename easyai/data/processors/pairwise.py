@@ -20,7 +20,7 @@ from .processor_utils import get_paligemma_token_type_ids, get_pixel_values
 
 
 if TYPE_CHECKING:
-    from transformers import PreTrainedTokenizer, ProcessorMixin
+    from transformers import PreTrainedTokenizer, ProcessorMixin, LlamaTokenizer
 
     from easyai.configs import DataArguments
     from ..template import Template
