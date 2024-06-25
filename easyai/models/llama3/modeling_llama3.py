@@ -13,7 +13,7 @@ from typing import Optional, Tuple, List, Union
 
 from loguru import logger
 from omegaconf import DictConfig
-from transformers import PreTrainedModel
+from transformers import PreTrainedModel, MODEL_FOR_CAUSAL_LM_MAPPING
 from transformers.activations import ACT2FN
 from transformers.modeling_outputs import (
     BaseModelOutputWithPast,
@@ -661,7 +661,7 @@ class Llama3Model(Llama3PreTrainedModel):
         )
 
 
-@registry.register_model("llama3-7b", Llama3Config, "model_for_causal_lm")
+@registry.register_model("llama3-7b", Llama3Config, MODEL_FOR_CAUSAL_LM_MAPPING)
 class Llama3ModelForCausalLM(Llama3PreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
@@ -830,7 +830,7 @@ class Llama3ModelForCausalLM(Llama3PreTrainedModel):
             )
         return reordered_past
 
-
+@registry.register_model("llama3-7b", )
 class Llama3ForSequenceClassification(Llama3PreTrainedModel):
     def __init__(self, config: Union[Llama3Config, dict]):
         if isinstance(config, dict):
