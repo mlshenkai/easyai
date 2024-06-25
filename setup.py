@@ -3,3 +3,78 @@
 # @Created Time: 2024/5/15 5:43 PM
 # @File: setup
 # @Email: mlshenkai@163.com
+import os
+import re
+
+from setuptools import find_packages, setup, find_namespace_packages
+
+
+def get_version():
+    with open(os.path.join("easyai", "configs", "env.py"), "r", encoding="utf-8") as f:
+        file_content = f.read()
+        pattern = r"{}\W*=\W*\"([^\"]+)\"".format("VERSION")
+        (version,) = re.findall(pattern, file_content)
+        return version
+
+
+def get_requires():
+    with open("requirements.txt", "r", encoding="utf-8") as f:
+        file_content = f.read()
+        lines = [
+            line.strip()
+            for line in file_content.strip().split("\n")
+            if not line.startswith("#")
+        ]
+        return lines
+
+
+extra_require = {
+    "torch": ["torch>=1.13.1"],
+    "torch-npu": ["torch==2.1.0", "torch-npu==2.1.0.post3", "decorator"],
+    "metrics": ["nltk", "jieba", "rouge-chinese"],
+    "deepspeed": ["deepspeed>=0.10.0"],
+    "bitsandbytes": ["bitsandbytes>=0.39.0"],
+    "vllm": ["vllm>=0.4.3"],
+    "galore": ["galore-torch"],
+    "badam": ["badam>=1.2.1"],
+    "gptq": ["optimum>=1.16.0", "auto-gptq>=0.5.0"],
+    "awq": ["autoawq"],
+    "aqlm": ["aqlm[gpu]>=1.1.0"],
+    "qwen": ["transformers_stream_generator"],
+    "modelscope": ["modelscope"],
+    "dev": ["ruff", "pytest"],
+}
+
+
+def main():
+    setup(
+        name="easyai",
+        version=get_version(),
+        author="watcher",
+        long_description=open("README.md", "r", encoding="utf-8").read(),
+        long_description_content_type="text/markdown",
+        license="Apache 2.0 License",
+        python_requires=">=3.8.0",
+        install_requires=get_requires(),
+        extras_require=extra_require,
+        entry_points={"console_scripts": ["easyai-cli = easyai.cli:main"]},
+        packages=find_namespace_packages(include="easyai.*"),
+        classifiers=[
+            "Development Status :: 4 - Beta",
+            "Intended Audience :: Developers",
+            "Intended Audience :: Education",
+            "Intended Audience :: Science/Research",
+            "License :: OSI Approved :: Apache Software License",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()

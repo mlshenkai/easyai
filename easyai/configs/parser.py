@@ -251,7 +251,7 @@ def get_train_args(args: Optional[Dict[str, Any]] = None) -> _TRAIN_CLS:
 
     if training_args.parallel_mode == ParallelMode.NOT_DISTRIBUTED:
         raise ValueError(
-            "Please launch distributed training with `llamafactory-cli` or `torchrun`."
+            "Please launch distributed training with `easyai-cli` or `torchrun`."
         )
 
     if training_args.max_steps == -1 and data_args.streaming:

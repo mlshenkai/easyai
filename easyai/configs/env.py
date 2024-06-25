@@ -22,12 +22,12 @@ import trl
 from transformers.utils import is_torch_cuda_available, is_torch_npu_available
 
 
-VERSION = "0.8.3.dev0"
+VERSION = "0.2.5dev0"
 
 
 def print_env() -> None:
     info = {
-        "`llamafactory` version": VERSION,
+        "`easyai` version": VERSION,
         "Platform": platform.platform(),
         "Python version": platform.python_version(),
         "PyTorch version": torch.__version__,

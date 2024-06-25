@@ -5,10 +5,25 @@
 # @Email: mlshenkai@163.com
 import sys
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from easyai.configs import get_train_args
 
-sys.argv = ["cli", "train", "--stage", "sft", "--do_train", "True", "--model_name_or_path", "/code", "--output_dir", "/code/logs", "--template", "default"]
+sys.argv = [
+    "cli",
+    "train",
+    "--stage",
+    "sft",
+    "--do_train",
+    "True",
+    "--model_name_or_path",
+    "/code",
+    "--output_dir",
+    "/code/logs",
+    "--template",
+    "default",
+]
+
 
 def args_test():
     print(sys.argv.pop(1))

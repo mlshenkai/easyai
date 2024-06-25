@@ -22,7 +22,7 @@ def init_weights_with_constant(model: nn.Module, constant: float = 1.0) -> None:
 
 
 if __name__ == "__main__":
-    from easyai.models.blip2.blip2_qformer import Blip2QFormerCLM
+    from easyai.models.custom_models.blip2.blip2_qformer import Blip2QFormerCLM
     from easyai.data.processors.blip_processors import BlipImageEvalProcessor
     from PIL import Image
     from transformers import Blip2Config

@@ -23,14 +23,16 @@ from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Tuple, Union
 import torch
 from peft import PeftModel
 from transformers import Trainer
+from transformers.integrations import is_deepspeed_zero3_enabled
 from transformers.optimization import get_scheduler
 from transformers.pytorch_utils import ALL_LAYERNORM_LAYERS
 from transformers.trainer_pt_utils import get_parameter_names
-from easyai.common.constants import IGNORE_INDEX
-from easyai.common.logging import get_logger
-from easyai.common import is_galore_available
-from easyai.configs import FinetuningArguments, ModelArguments
-from easyai.models import (
+
+from ...common.constants import IGNORE_INDEX
+from ...common.logging import get_logger
+from ...common.packages import is_galore_available
+from ...configs import FinetuningArguments, ModelArguments
+from ...models import (
     find_all_linear_modules,
     load_model,
     load_tokenizer,
@@ -43,7 +45,12 @@ if is_galore_available():
 
 
 if TYPE_CHECKING:
-    pass
+    from accelerate import Accelerator
+    from transformers import PreTrainedModel, Seq2SeqTrainingArguments
+    from trl import AutoModelForCausalLMWithValueHead
+
+    from ...configs import DataArguments
+
 
 logger = get_logger(__name__)
 
@@ -487,6 +494,7 @@ def _create_badam_optimizer(
             start_block=finetuning_args.badam_start_block,
             switch_mode=finetuning_args.badam_switch_mode,
             verbose=finetuning_args.badam_verbose,
+            ds_zero3_enabled=is_deepspeed_zero3_enabled(),
         )
         logger.info(
             f"Using BAdam optimizer with layer-wise update, switch mode is {finetuning_args.badam_switch_mode}, "
@@ -508,7 +516,7 @@ def _create_badam_optimizer(
             **optim_kwargs,
         )
         logger.info(
-            f"Using BAdam optimizer with ratio-wise update, update ratio is {finetuning_args.badam_update_ratio}, "
+            f"Using BAdam optimizer with ratio-based update, update ratio is {finetuning_args.badam_update_ratio}, "
             f"mask mode is {finetuning_args.badam_mask_mode}"
         )
 
@@ -517,7 +525,7 @@ def _create_badam_optimizer(
 
 def create_custom_optimzer(
     model: "PreTrainedModel",
-    training_args: "T",
+    training_args: "Seq2SeqTrainingArguments",
     finetuning_args: "FinetuningArguments",
 ) -> Optional["torch.optim.Optimizer"]:
     if finetuning_args.use_galore:

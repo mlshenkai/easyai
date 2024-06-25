@@ -30,11 +30,14 @@ from transformers.pytorch_utils import (
 
 from easyai.common import get_rank
 from easyai.common import Fp32LayerNorm
-from easyai.models.blip2.blip2_vision import Blip2VisionModel
+from easyai.models.custom_models.blip2.blip2_vision import Blip2VisionModel
 from easyai.common import concat_all_gather, all_gather_with_grad
-from easyai.models.blip2.base_blip2_model import Blip2BaseModel
+from easyai.models.custom_models.blip2.base_blip2_model import Blip2BaseModel
 from easyai.common import registry
-from easyai.models.blip2.configuration_blip2 import Blip2Config, Blip2QFormerConfig
+from easyai.models.custom_models.blip2.configuration_blip2 import (
+    Blip2Config,
+    Blip2QFormerConfig,
+)
 
 
 class Blip2QFormerOutputWithLoss(ModelOutput):

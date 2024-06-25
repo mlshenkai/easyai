@@ -1,4 +1,3 @@
-# Copyright 2024 the LlamaFactory team.
 #
 # This code is inspired by the CarperAI's trlx library.
 # https://github.com/CarperAI/trlx/blob/v0.7.0/examples/summarize_rlhf/reward_model/reward_model.py

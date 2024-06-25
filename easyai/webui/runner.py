@@ -1,4 +1,3 @@
-# Copyright 2024 the LlamaFactory team.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -364,7 +363,7 @@ class Runner:
                 env["FORCE_TORCHRUN"] = "1"
 
             self.trainer = Popen(
-                "llamafactory-cli train {}".format(save_cmd(args)), env=env, shell=True
+                "easyai-cli train {}".format(save_cmd(args)), env=env, shell=True
             )
             yield from self.monitor()
 

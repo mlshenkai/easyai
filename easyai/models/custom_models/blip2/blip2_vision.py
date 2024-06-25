@@ -3,7 +3,7 @@
 # @Created Time: 2024/5/21 4:34 PM
 # @File: blip2_vision
 # @Email: mlshenkai@163.com
-from typing import Optional, Tuple, Union, Mapping, Any
+from typing import Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -11,7 +11,7 @@ import torch.utils.checkpoint
 from transformers import Blip2PreTrainedModel
 from transformers.activations import ACT2FN
 from transformers.modeling_outputs import BaseModelOutput, BaseModelOutputWithPooling
-from easyai.models.blip2.configuration_blip2 import Blip2VisionConfig
+from easyai.models.custom_models.blip2.configuration_blip2 import Blip2VisionConfig
 
 
 class Blip2VisionEmbeddings(nn.Module):

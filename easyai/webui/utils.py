@@ -1,4 +1,3 @@
-# Copyright 2024 the LlamaFactory team.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -103,7 +102,7 @@ def gen_cmd(args: Dict[str, Any]) -> str:
     r"""
     Generates arguments for previewing.
     """
-    cmd_lines = ["llamafactory-cli train "]
+    cmd_lines = ["easyai-cli train "]
     for k, v in clean_cmd(args).items():
         cmd_lines.append("    --{} {} ".format(k, str(v)))
 

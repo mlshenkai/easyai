@@ -1,4 +1,3 @@
-# Copyright 2024 the LlamaFactory team.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,14 +32,14 @@ USAGE = (
     "-" * 70
     + "\n"
     + "| Usage:                                                             |\n"
-    + "|   llamafactory-cli api -h: launch an OpenAI-style API server       |\n"
-    + "|   llamafactory-cli chat -h: launch a chat interface in CLI         |\n"
-    + "|   llamafactory-cli eval -h: evaluate models                        |\n"
-    + "|   llamafactory-cli export -h: merge LoRA adapters and export model |\n"
-    + "|   llamafactory-cli train -h: train models                          |\n"
-    + "|   llamafactory-cli webchat -h: launch a chat interface in Web UI   |\n"
-    + "|   llamafactory-cli webui: launch LlamaBoard                        |\n"
-    + "|   llamafactory-cli version: show version info                      |\n"
+    + "|   easyai-cli api -h: launch an OpenAI-style API server       |\n"
+    + "|   easyai-cli chat -h: launch a chat interface in CLI         |\n"
+    + "|   easyai-cli eval -h: evaluate models                        |\n"
+    + "|   easyai-cli export -h: merge LoRA adapters and export model |\n"
+    + "|   easyai-cli train -h: train models                          |\n"
+    + "|   easyai-cli webchat -h: launch a chat interface in Web UI   |\n"
+    + "|   easyai-cli webui: launch LlamaBoard                        |\n"
+    + "|   easyai-cli version: show version info                      |\n"
     + "-" * 70
 )
 

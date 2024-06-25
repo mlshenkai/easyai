@@ -453,7 +453,7 @@ class Llama3Model(Llama3PreTrainedModel):
             self.embed_tokens = nn.Embedding(
                 num_embeddings=self.vocab_size,
                 embedding_dim=config.hidden_size,
-                padding_idx=self.padding_idx
+                padding_idx=self.padding_idx,
             )
 
         self.layers = nn.ModuleList(
@@ -832,7 +832,9 @@ class Llama3ModelForCausalLM(Llama3PreTrainedModel):
         return reordered_past
 
 
-@registry.register_model("llama3-7b", Llama3Config, AutoModelEnum.MODEL_FOR_SEQUENCE_CLASSIFICATION)
+@registry.register_model(
+    "llama3-7b", Llama3Config, AutoModelEnum.MODEL_FOR_SEQUENCE_CLASSIFICATION
+)
 class Llama3ForSequenceClassification(Llama3PreTrainedModel):
     def __init__(self, config: Union[Llama3Config, dict]):
         if isinstance(config, dict):
