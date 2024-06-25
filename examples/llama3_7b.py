@@ -4,4 +4,6 @@
 # @File: llama3_7b
 # @Email: mlshenkai@163.com
 # from trl import DPOTrainer
-from easyai import cli
+from easyai import cli, launcher
+
+print(launcher.__file__)
