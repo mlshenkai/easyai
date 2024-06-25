@@ -24,14 +24,13 @@ from transformers.modeling_outputs import (
 from torch.nn import BCEWithLogitsLoss, MSELoss, CrossEntropyLoss
 
 from easyai.common.dist_utils import is_dist_avail_and_initialized
-from easyai.configs import ModelArguments
 from fairscale.nn.model_parallel.layers import (
     ColumnParallelLinear,
     RowParallelLinear,
     VocabParallelEmbedding,
 )
 import fairscale.nn.model_parallel.initialize as fs_init
-from easyai.common.registry import registry
+from easyai.common import registry
 from .configuration_llama3 import Llama3Config
 
 

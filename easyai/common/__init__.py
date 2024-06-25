@@ -10,5 +10,7 @@ from .env import *
 from .misc import *
 from .packages import *
 from .ploting import *
+from .auto_constants import AutoModelEnum
+from .registry import registry
 
-__all__ = ["get_logger"]
+__all__ = ["get_logger", "AutoModelEnum", "registry"]

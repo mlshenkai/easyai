@@ -8,7 +8,7 @@ from enum import Enum
 from transformers.models.auto import *
 
 
-class AutoModelEnum(Enum):
+class AutoModelEnum:
     MODEL = MODEL_MAPPING
     MODEL_FOR_PRETRAINING = MODEL_FOR_PRETRAINING_MAPPING
     MODEL_WITH_LM_HEAD = MODEL_WITH_LM_HEAD_MAPPING
