@@ -22,13 +22,16 @@ from transformers.modeling_outputs import (
 )
 from torch.nn import BCEWithLogitsLoss, MSELoss, CrossEntropyLoss
 
-from easyai.models.llama3.configuration_llama3 import Llama3Config
+from easyai.common.dist_utils import is_dist_avail_and_initialized
+from easyai.configs import ModelArguments
 from fairscale.nn.model_parallel.layers import (
     ColumnParallelLinear,
     RowParallelLinear,
     VocabParallelEmbedding,
 )
 import fairscale.nn.model_parallel.initialize as fs_init
+from easyai.common.registry import registry
+from .configuration_llama3 import Llama3Config
 
 
 # copied by transformers.models.bart.modeling_bart._make_causal_mask
@@ -166,29 +169,48 @@ class LlamaMLP(nn.Module):
         self.config = config
         self.hidden_size = config.hidden_size
         self.intermediate_size = config.intermediate_size
-        self.gate_proj = ColumnParallelLinear(
-            in_features=self.hidden_size,
-            out_features=self.intermediate_size,
-            bias=False,
-            gather_output=False,
-            init_method=lambda x: x,
-        )
+        if is_dist_avail_and_initialized():
+            self.gate_proj = ColumnParallelLinear(
+                in_features=self.hidden_size,
+                out_features=self.intermediate_size,
+                bias=False,
+                gather_output=False,
+                init_method=lambda x: x,
+            )
 
-        self.up_proj = ColumnParallelLinear(
-            in_features=self.hidden_size,
-            out_features=self.intermediate_size,
-            bias=False,
-            gather_output=False,
-            init_method=lambda x: x,
-        )
+            self.up_proj = ColumnParallelLinear(
+                in_features=self.hidden_size,
+                out_features=self.intermediate_size,
+                bias=False,
+                gather_output=False,
+                init_method=lambda x: x,
+            )
 
-        self.down_proj = RowParallelLinear(
-            in_features=self.intermediate_size,
-            out_features=self.hidden_size,
-            bias=False,
-            input_is_parallel=True,
-            init_method=lambda x: x,
-        )
+            self.down_proj = RowParallelLinear(
+                in_features=self.intermediate_size,
+                out_features=self.hidden_size,
+                bias=False,
+                input_is_parallel=True,
+                init_method=lambda x: x,
+            )
+        else:
+            self.gate_proj = nn.Linear(
+                in_features=self.hidden_size,
+                out_features=self.intermediate_size,
+                bias=False,
+            )
+
+            self.up_proj = nn.Linear(
+                in_features=self.hidden_size,
+                out_features=self.intermediate_size,
+                bias=False,
+            )
+
+            self.down_proj = nn.Linear(
+                in_features=self.intermediate_size,
+                out_features=self.hidden_size,
+                bias=False,
+            )
         self.act_fn = ACT2FN[self.config.hidden_act]
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -199,7 +221,10 @@ class LlamaAttention(nn.Module):
     def __init__(self, config: Llama3Config):
         super().__init__()
         self.config = config
-        model_parallel_size = fs_init.get_model_parallel_world_size()
+        if is_dist_avail_and_initialized():
+            model_parallel_size = fs_init.get_model_parallel_world_size()
+        else:
+            model_parallel_size = 1
         self.num_key_value_heads = config.num_key_value_heads
         self.num_heads = config.num_attention_heads
 
@@ -211,38 +236,62 @@ class LlamaAttention(nn.Module):
 
         self.max_position_embeddings = config.max_position_embeddings
         self.head_dim = config.hidden_size // self.num_heads
+        if is_dist_avail_and_initialized():
+            self.q_proj = ColumnParallelLinear(
+                in_features=self.hidden_size,
+                out_features=self.num_heads * self.head_dim,
+                bias=False,
+                gather_output=False,
+                init_method=lambda x: x,
+            )
 
-        self.q_proj = ColumnParallelLinear(
-            in_features=self.hidden_size,
-            out_features=self.num_heads * self.head_dim,
-            bias=False,
-            gather_output=False,
-            init_method=lambda x: x,
-        )
+            self.k_proj = ColumnParallelLinear(
+                in_features=self.hidden_size,
+                out_features=self.num_key_value_heads * self.head_dim,
+                bias=False,
+                gather_output=False,
+                init_method=lambda x: x,
+            )
 
-        self.k_proj = ColumnParallelLinear(
-            in_features=self.hidden_size,
-            out_features=self.num_key_value_heads * self.head_dim,
-            bias=False,
-            gather_output=False,
-            init_method=lambda x: x,
-        )
+            self.v_proj = ColumnParallelLinear(
+                in_features=self.hidden_size,
+                out_features=self.num_key_value_heads * self.head_dim,
+                bias=False,
+                gather_output=False,
+                init_method=lambda x: x,
+            )
 
-        self.v_proj = ColumnParallelLinear(
-            in_features=self.hidden_size,
-            out_features=self.num_key_value_heads * self.head_dim,
-            bias=False,
-            gather_output=False,
-            init_method=lambda x: x,
-        )
+            self.o_proj = RowParallelLinear(
+                in_features=self.num_heads * self.head_dim,
+                out_features=self.hidden_size,
+                bias=False,
+                input_is_parallel=True,
+                init_method=lambda x: x,
+            )
+        else:
+            self.q_proj = nn.Linear(
+                in_features=self.hidden_size,
+                out_features=self.num_heads * self.head_dim,
+                bias=False,
+            )
 
-        self.o_proj = RowParallelLinear(
-            in_features=self.num_heads * self.head_dim,
-            out_features=self.hidden_size,
-            bias=False,
-            input_is_parallel=True,
-            init_method=lambda x: x,
-        )
+            self.k_proj = nn.Linear(
+                in_features=self.hidden_size,
+                out_features=self.num_key_value_heads * self.head_dim,
+                bias=False,
+            )
+
+            self.v_proj = nn.Linear(
+                in_features=self.hidden_size,
+                out_features=self.num_key_value_heads * self.head_dim,
+                bias=False,
+            )
+
+            self.o_proj = nn.Linear(
+                in_features=self.num_heads * self.head_dim,
+                out_features=self.hidden_size,
+                bias=False,
+            )
 
     def forward(
         self,
@@ -392,13 +441,19 @@ class Llama3Model(Llama3PreTrainedModel):
         super().__init__(config)
         self.padding_idx = config.pad_token_id
         self.vocab_size = config.vocab_size
-
-        self.embed_tokens = VocabParallelEmbedding(
-            num_embeddings=self.vocab_size,
-            embedding_dim=config.hidden_size,
-            padding_idx=self.padding_idx,
-            init_method=lambda x: x,
-        )
+        if is_dist_avail_and_initialized():
+            self.embed_tokens = VocabParallelEmbedding(
+                num_embeddings=self.vocab_size,
+                embedding_dim=config.hidden_size,
+                padding_idx=self.padding_idx,
+                init_method=lambda x: x,
+            )
+        else:
+            self.embed_tokens = nn.Embedding(
+                num_embeddings=self.vocab_size,
+                embedding_dim=config.hidden_size,
+                padding_idx=self.padding_idx
+            )
 
         self.layers = nn.ModuleList(
             [LlamaDecoderLayer(config) for _ in range(config.num_hidden_layers)]
@@ -606,6 +661,7 @@ class Llama3Model(Llama3PreTrainedModel):
         )
 
 
+@registry.register_model("llama3-7b", Llama3Config, "model_for_causal_lm")
 class Llama3ModelForCausalLM(Llama3PreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
@@ -615,12 +671,19 @@ class Llama3ModelForCausalLM(Llama3PreTrainedModel):
         super().__init__(config)
         self.model = Llama3Model(config)
         self.vocab_size = config.vocab_size
-        self.lm_head = ColumnParallelLinear(
-            in_features=config.hidden_size,
-            out_features=self.vocab_size,
-            bias=False,
-            init_method=lambda x: x,
-        )
+        if is_dist_avail_and_initialized():
+            self.lm_head = ColumnParallelLinear(
+                in_features=config.hidden_size,
+                out_features=self.vocab_size,
+                bias=False,
+                init_method=lambda x: x,
+            )
+        else:
+            self.lm_head = nn.Linear(
+                in_features=config.hidden_size,
+                out_features=self.vocab_size,
+                bias=False,
+            )
         self.post_init()
 
     def get_input_embeddings(self) -> nn.Module:

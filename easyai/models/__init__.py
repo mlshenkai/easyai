@@ -12,9 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .llama3 import *
+
+
 from .loader import load_config, load_model, load_tokenizer
 from .model_utils.misc import find_all_linear_modules
 from .model_utils.valuehead import load_valuehead_params
+
 
 
 __all__ = [

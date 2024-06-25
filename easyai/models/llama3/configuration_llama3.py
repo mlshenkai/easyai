@@ -4,12 +4,16 @@
 # @File: configuration_llama3
 # @Email: mlshenkai@163.com
 from typing import Optional
-from easyai.common import registry
+from easyai.common.registry import registry
 from transformers import LlamaConfig
 
+model_type = "_llama3"
 
-@registry.register_model_config("llama3_model_config")
+
+@registry.register_model_config(f"{model_type}")
 class Llama3Config(LlamaConfig):
+    model_type = model_type
+
     def __init__(
         self,
         vocab_size=32000,
