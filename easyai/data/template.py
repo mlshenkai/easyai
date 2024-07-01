@@ -46,13 +46,13 @@ class Template:
     replace_eos: bool
 
     def encode_oneturn(
-            self,
-            tokenizer: "PreTrainedTokenizer",
-            messages: List[Dict[str, str]],
-            system: Optional[str] = None,
-            tools: Optional[str] = None,
-            cutoff_len: int = 1_000_000,
-            reserved_label_len: int = 1,
+        self,
+        tokenizer: "PreTrainedTokenizer",
+        messages: List[Dict[str, str]],
+        system: Optional[str] = None,
+        tools: Optional[str] = None,
+        cutoff_len: int = 1_000_000,
+        reserved_label_len: int = 1,
     ) -> Tuple[List[int], List[int]]:
         r"""
         Returns a single pair of token ids representing prompt and response respectively.

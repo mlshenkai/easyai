@@ -5,6 +5,10 @@
   "alpaca_en_demo": {
     "file_name": "alpaca_en_demo.json"
   },
+  "cross_ner": {
+    "hf_hub_url": "DFKI-SLT/cross_ner",
+    "subset": "conll2003"
+  },
   "alpaca_zh_demo": {
     "file_name": "alpaca_zh_demo.json"
   },

@@ -1,6 +1,8 @@
 # %%
 import sys
 
+from datasets import load_dataset
+
 sys.path.append("/code-online/code/easy_ai")
 import os
 
@@ -23,11 +25,11 @@ sys.argv = [
     "--output_dir",
     "/code/logs",
     "--template",
-    "default",
+    "empty",
     "--dataset_dir",
     "/code-online/code/easy_ai/data",
     "--dataset",
-    "alpaca_zh",
+    "cross_ner",
     "--finetuning_type",
     "full",
 ]
@@ -47,7 +49,7 @@ from easyai.models import load_tokenizer, load_model
 # %%
 tokenizer = load_tokenizer(model_args)
 # %%
-# datasets = get_dataset(model_args=model_args, data_args=data_args,training_args=training_args,stage="pt", **tokenizer)
+datasets = get_dataset(model_args=model_args, data_args=data_args,training_args=training_args,stage="pt", **tokenizer)
 
 # %%
 model = load_model(
