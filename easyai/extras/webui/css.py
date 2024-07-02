@@ -12,16 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+CSS = r"""
+.duplicate-button {
+  margin: auto !important;
+  color: white !important;
+  background: black !important;
+  border-radius: 100vh !important;
+}
 
-from easyai.extras.webui.interface import create_ui
+.modal-box {
+  position: fixed !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* center horizontally */
+  max-width: 1000px;
+  max-height: 750px;
+  overflow-y: auto;
+  background-color: var(--input-background-fill);
+  flex-wrap: nowrap !important;
+  border: 2px solid black !important;
+  z-index: 1000;
+  padding: 10px;
+}
 
-
-def main():
-    gradio_share = os.environ.get("GRADIO_SHARE", "0").lower() in ["true", "1"]
-    server_name = os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0")
-    create_ui().queue().launch(share=gradio_share, server_name=server_name, inbrowser=True)
-
-
-if __name__ == "__main__":
-    main()
+.dark .modal-box {
+  border: 2px solid white !important;
+}
+"""

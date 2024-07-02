@@ -12,16 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-from easyai.extras.webui.interface import create_ui
-
-
-def main():
-    gradio_share = os.environ.get("GRADIO_SHARE", "0").lower() in ["true", "1"]
-    server_name = os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0")
-    create_ui().queue().launch(share=gradio_share, server_name=server_name, inbrowser=True)
+from .chatbot import create_chat_box
+from .eval import create_eval_tab
+from .export import create_export_tab
+from .infer import create_infer_tab
+from .top import create_top
+from .train import create_train_tab
 
 
-if __name__ == "__main__":
-    main()
+__all__ = [
+    "create_chat_box",
+    "create_eval_tab",
+    "create_export_tab",
+    "create_infer_tab",
+    "create_top",
+    "create_train_tab",
+]

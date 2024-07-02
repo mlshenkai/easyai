@@ -12,16 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-from easyai.extras.webui.interface import create_ui
-
-
-def main():
-    gradio_share = os.environ.get("GRADIO_SHARE", "0").lower() in ["true", "1"]
-    server_name = os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0")
-    create_ui().queue().launch(share=gradio_share, server_name=server_name, inbrowser=True)
+import json
+from typing import TYPE_CHECKING, Any, Dict
 
 
-if __name__ == "__main__":
-    main()
+if TYPE_CHECKING:
+    from pydantic import BaseModel
+
+
+def dictify(data: "BaseModel") -> Dict[str, Any]:
+    try:  # pydantic v2
+        return data.model_dump(exclude_unset=True)
+    except AttributeError:  # pydantic v1
+        return data.dict(exclude_unset=True)
+
+
+def jsonify(data: "BaseModel") -> str:
+    try:  # pydantic v2
+        return json.dumps(data.model_dump(exclude_unset=True), ensure_ascii=False)
+    except AttributeError:  # pydantic v1
+        return data.json(exclude_unset=True, ensure_ascii=False)

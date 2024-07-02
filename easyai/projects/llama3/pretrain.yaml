@@ -1,8 +1,0 @@
-model:
-  arch: llama3_model
-  model_type: pretrain
-
-run:
-  task: image_text_pretrain
-
-

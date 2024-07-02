@@ -12,16 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-from easyai.extras.webui.interface import create_ui
-
-
-def main():
-    gradio_share = os.environ.get("GRADIO_SHARE", "0").lower() in ["true", "1"]
-    server_name = os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0")
-    create_ui().queue().launch(share=gradio_share, server_name=server_name, inbrowser=True)
+from .data_args import DataArguments
+from .evaluation_args import EvaluationArguments
+from .finetuning_args import FinetuningArguments
+from .generating_args import GeneratingArguments
+from .model_args import ModelArguments
+from .parser import get_eval_args, get_infer_args, get_train_args
 
 
-if __name__ == "__main__":
-    main()
+__all__ = [
+    "DataArguments",
+    "EvaluationArguments",
+    "FinetuningArguments",
+    "GeneratingArguments",
+    "ModelArguments",
+    "get_eval_args",
+    "get_infer_args",
+    "get_train_args",
+]

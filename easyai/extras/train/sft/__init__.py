@@ -12,16 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-from easyai.extras.webui.interface import create_ui
+from .workflow import run_sft
 
 
-def main():
-    gradio_share = os.environ.get("GRADIO_SHARE", "0").lower() in ["true", "1"]
-    server_name = os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0")
-    create_ui().queue().launch(share=gradio_share, server_name=server_name, inbrowser=True)
-
-
-if __name__ == "__main__":
-    main()
+__all__ = ["run_sft"]

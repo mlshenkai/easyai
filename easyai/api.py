@@ -1,3 +1,4 @@
+# Copyright 2024 the LlamaFactory team.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,8 +16,8 @@ import os
 
 import uvicorn
 
-from easyai.api.app import create_app
-from easyai.engine import ChatModel
+from easyai.extras.api.app import create_app
+from easyai.extras.chat import ChatModel
 
 
 def main():
