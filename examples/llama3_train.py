@@ -11,13 +11,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # %%
 import sys
 
-from easyai.configs import get_train_args
+from easyai.extras.hparams import get_train_args
 
 sys.argv = [
     "cli",
     "train",
     "--stage",
-    "sft",
+    "pt",
     "--do_train",
     "True",
     "--model_name_or_path",
@@ -25,11 +25,11 @@ sys.argv = [
     "--output_dir",
     "/code/logs",
     "--template",
-    "empty",
+    "default",
     "--dataset_dir",
     "/code-online/code/easy_ai/data",
     "--dataset",
-    "cross_ner",
+    "alpaca_zh_demo",
     "--finetuning_type",
     "full",
 ]
@@ -43,8 +43,8 @@ sys.argv.pop(1)
     generating_args,
 ) = get_train_args()
 # %%
-from easyai.data import get_dataset
-from easyai.models import load_tokenizer, load_model
+from easyai.extras.data import get_dataset
+from easyai.extras.model import load_tokenizer, load_model
 
 # %%
 tokenizer = load_tokenizer(model_args)

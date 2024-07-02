@@ -5,4 +5,5 @@
 # @Email: mlshenkai@163.com
 
 
-from .llama3 import *
+from .configuration_llama3 import Llama3Config
+from .modeling_llama3 import Llama3ModelForCausalLM

@@ -3,3 +3,8 @@
 # @Created Time: 2024/7/2 下午3:51
 # @File: __init__.py
 # @Email: mlshenkai@163.com
+from .registry import registry
+
+__all__ = [
+    "registry"
+]
